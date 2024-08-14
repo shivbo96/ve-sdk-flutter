@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:ve_sdk_flutter/export_result.dart';
 import 'package:ve_sdk_flutter/features_config.dart';
 import 'package:ve_sdk_flutter/features_config_serializer.dart';
-import 'package:ve_sdk_flutter/export_result.dart';
+
 import 've_sdk_flutter_platform_interface.dart';
 
 /// An implementation of [VeSdkFlutterPlatform] that uses method channels.
@@ -26,79 +27,51 @@ class MethodChannelVeSdkFlutter extends VeSdkFlutterPlatform {
   static const String _exportedVideoSources = 'exportedVideoSources';
   static const String _exportedPreview = 'exportedPreview';
   static const String _exportedMeta = 'exportedMeta';
+  static const String _musicFileName = 'musicFileName';
 
   /// The method channel used to interact with the native platform.
   @visibleForTesting
   final methodChannel = const MethodChannel(_channelName);
 
   @override
-  Future<ExportResult?> openCameraScreen(
-      String token,
-      FeaturesConfig featuresConfig
-  ) => _open(
-      token,
-      featuresConfig,
-      _screenCamera,
-      []
-  );
+  Future<ExportResult?> openCameraScreen(String token, FeaturesConfig featuresConfig) =>
+      _open(token, featuresConfig, _screenCamera, []);
 
   @override
-  Future<ExportResult?> openPipScreen(
-      String token,
-      FeaturesConfig featuresConfig,
-      String sourceVideoPath
-  ) => _open(
-      token,
-      featuresConfig,
-      _screenPip,
-      [sourceVideoPath]
-  );
+  Future<ExportResult?> openPipScreen(String token, FeaturesConfig featuresConfig, String sourceVideoPath) =>
+      _open(token, featuresConfig, _screenPip, [sourceVideoPath]);
 
   @override
   Future<ExportResult?> openTrimmerScreen(
-      String token,
-      FeaturesConfig featuresConfig,
-      List<String> sourceVideoPathList
-  ) => _open(
-      token,
-      featuresConfig,
-      _screenTrimmer,
-      sourceVideoPathList
-  );
+          String token, FeaturesConfig featuresConfig, List<String> sourceVideoPathList) =>
+      _open(token, featuresConfig, _screenTrimmer, sourceVideoPathList);
 
   Future<ExportResult?> _open(
-      String token,
-      FeaturesConfig featuresConfig,
-      String screen,
-      List<String> sourceVideoPathList
-  ) async {
-      final inputParams = {
-        _inputParamToken: token,
-        _inputParamFeaturesConfig: featuresConfig.serialize(),
-        _inputParamScreen: screen,
-        _inputParamVideoSources: sourceVideoPathList
-      };
+      String token, FeaturesConfig featuresConfig, String screen, List<String> sourceVideoPathList) async {
+    final inputParams = {
+      _inputParamToken: token,
+      _inputParamFeaturesConfig: featuresConfig.serialize(),
+      _inputParamScreen: screen,
+      _inputParamVideoSources: sourceVideoPathList
+    };
 
     debugPrint('Start video editor with params = $inputParams');
 
-    dynamic exportedData =
-        await methodChannel.invokeMethod(_methodStart, inputParams);
+    dynamic exportedData = await methodChannel.invokeMethod(_methodStart, inputParams);
 
     if (exportedData == null) {
       return null;
     } else {
-      List<Object?> sources =
-          exportedData[_exportedVideoSources] as List<Object?>;
-      List<String> videoSources = sources
-          .where((element) => element != null)
-          .map((e) => e.toString())
-          .toList();
+      List<Object?> sources = exportedData[_exportedVideoSources] as List<Object?>;
+      List<String> videoSources = sources.where((element) => element != null).map((e) => e.toString()).toList();
 
       String? metaFilePath = exportedData[_exportedMeta];
       String? previewFilePath = exportedData[_exportedPreview];
+      String? musicFileName = exportedData[_musicFileName];
       return ExportResult(
           videoSources: videoSources,
           previewFilePath: previewFilePath,
+          musicFileName: musicFileName,
           metaFilePath: metaFilePath);
     }
   }

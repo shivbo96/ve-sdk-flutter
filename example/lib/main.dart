@@ -7,7 +7,8 @@ import 'package:ve_sdk_flutter/export_result.dart';
 import 'package:ve_sdk_flutter/features_config.dart';
 import 'package:ve_sdk_flutter/ve_sdk_flutter.dart';
 
-const _licenseToken = SET UP YOUR LICENSE TOKEN;
+const _licenseToken =
+    'Qk5CIN+7a/vZLTpKcGY94c/BaL7StVfhFsUNbPvJ3g/64rZhPg32vJF/buyNmDWrxbuhBAUOpQxM13lPvQB1vUHxikoVNrL5olc7ocGKKm8uiOe1TPuXfMeX0IH3CEe33zxX8UX+Xu63pLrLiLoXSoxGjwEVNCXfui33JhMR0XQLQ/EVgVe408BSaSsJIRe6nmbxZjmp7gY2qzfZO17fNR92gp7LecQpj/Y9QAjFHcLrr0RkelTIPRgw+gKIWbRjlYP55QoROHiKJZtzjmlTI/51BSWMBjVE5UWwGmHVRgd3NrDNuiqKdqBL+rGg0OC1EgzLJRlEZtQbTxyzug17hLlOpIrTPoshfB2UEom67QDeUDoznGbtFs1OcOZUBl8XE4Z7raKLJj5LK80mpydONPZ/NthY84JOvpRTrr7at62U8j166edtSjr9y07cwEJCUOU9ahfKYhzWBwdmaNxzmMHqc2CF8OW7OcfL20O/OcFU4cJUZX3YH11oMUYJXPiiOeqQDtdos1ANsa72LPhus0bmEZ6WLXDnQTh4yi7a6Hnw82JtjrEjnXtPJPXlwqO520aESisXjJlsnnONfY3hBJQ9SUhWXp2gqaUUnIphmRJvm1GCcOxgiYDm9+x7pDro9OU=';
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }
@@ -40,17 +41,17 @@ class _HomePageState extends State<HomePage> {
   final _veSdkFlutterPlugin = VeSdkFlutter();
   String _errorMessage = '';
 
-  Future<void> _startVideoEditorInCameraMode() async {
+  String? selectedMusicName;
 
+  Future<void> _startVideoEditorInCameraMode() async {
     // Specify your Config params in the builder below
 
     final config = FeaturesConfigBuilder()
-      .setAiCaptions(AiCaptions(uploadUrl: "uploadUrl", transcribeUrl: "transcribeUrl", apiKey: "apiKey"))
-      // ...
-      .build();
+        .setDraftConfig(DraftConfig.fromOption(DraftOption.disabled))
+        // .setAiCaptions(const AiCaptions(uploadUrl: "uploadUrl", transcribeUrl: "transcribeUrl", apiKey: "apiKey"))
+        .build();
     try {
-      dynamic exportResult =
-          await _veSdkFlutterPlugin.openCameraScreen(_licenseToken, config);
+      dynamic exportResult = await _veSdkFlutterPlugin.openCameraScreen(_licenseToken, config);
       _handleExportResult(exportResult);
     } on PlatformException catch (e) {
       _handlePlatformException(e);
@@ -75,8 +76,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     try {
-      dynamic exportResult = await _veSdkFlutterPlugin.openPipScreen(
-          _licenseToken, config, sourceVideoFile);
+      dynamic exportResult = await _veSdkFlutterPlugin.openPipScreen(_licenseToken, config, sourceVideoFile);
       _handleExportResult(exportResult);
     } on PlatformException catch (e) {
       _handlePlatformException(e);
@@ -84,13 +84,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _startVideoEditorInTrimmerMode() async {
-
     // Specify your Config params in the builder below
 
     final config = FeaturesConfigBuilder()
-      .setDraftConfig(DraftConfig.fromOption(DraftOption.auto))
-      //...
-      .build();
+        .setDraftConfig(DraftConfig.fromOption(DraftOption.auto))
+        //...
+        .build();
     final ImagePicker picker = ImagePicker();
     final videoFiles = await picker.pickMultipleMedia(imageQuality: 3);
 
@@ -102,8 +101,7 @@ class _HomePageState extends State<HomePage> {
     final sources = videoFiles.map((f) => f.path).toList();
 
     try {
-      dynamic exportResult = await _veSdkFlutterPlugin.openTrimmerScreen(
-          _licenseToken, config, sources);
+      dynamic exportResult = await _veSdkFlutterPlugin.openTrimmerScreen(_licenseToken, config, sources);
       _handleExportResult(exportResult);
     } on PlatformException catch (e) {
       _handlePlatformException(e);
@@ -115,6 +113,12 @@ class _HomePageState extends State<HomePage> {
       debugPrint('No export result! The user has closed video editor before export');
       return;
     }
+
+    setState(() {
+      selectedMusicName = result.musicFileName;
+    });
+
+    debugPrint('Exported musicFileName = ${result.musicFileName}');
 
     // The list of exported video file paths
     debugPrint('Exported video files = ${result.videoSources}');
@@ -216,6 +220,8 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+            const SizedBox(height: 24),
+            Text((selectedMusicName ?? '').isEmpty ? 'No file Selected' : 'Selected file name $selectedMusicName '),
           ],
         ),
       ),

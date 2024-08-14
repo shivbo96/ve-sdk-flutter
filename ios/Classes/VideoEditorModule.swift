@@ -235,8 +235,10 @@ extension VideoEditorModule {
                 let data = [
                     VeSdkFlutterPlugin.argExportedVideoSources: videoUrls.compactMap { $0.path },
                     VeSdkFlutterPlugin.argExportedPreview: previewUrl.path,
-                    VeSdkFlutterPlugin.argExportedMeta: metaUrl?.path
+                    VeSdkFlutterPlugin.argExportedMeta: metaUrl?.path,
+                    VeSdkFlutterPlugin.musicFileName: self.videoEditorSDK?.musicTrack?.title
                 ]
+                print("data \(data)")
                 self.flutterResult?(data)
             } else {
                 print("Error while exporting video = \(String(describing: error))")

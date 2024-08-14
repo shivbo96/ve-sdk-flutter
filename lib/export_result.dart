@@ -4,9 +4,13 @@ class ExportResult {
   List<String> videoSources;
   String? previewFilePath;
   String? metaFilePath;
+  String? musicFileName;
 
   ExportResult(
-      {required this.videoSources, required this.previewFilePath, required this.metaFilePath});
+      {required this.videoSources,
+      required this.previewFilePath,
+      required this.metaFilePath,
+      required this.musicFileName});
 
   @override
   bool operator ==(Object other) =>
@@ -15,6 +19,7 @@ class ExportResult {
           runtimeType == other.runtimeType &&
           videoSources == other.videoSources &&
           previewFilePath == other.previewFilePath &&
+          musicFileName == other.musicFileName &&
           metaFilePath == other.metaFilePath;
 
   @override
@@ -22,6 +27,6 @@ class ExportResult {
 
   @override
   String toString() {
-    return 'ExportResult{videoSources: $videoSources, previewFilePath: $previewFilePath, metaFilePath: $metaFilePath}';
+    return 'ExportResult{videoSources: $videoSources, previewFilePath: $previewFilePath, metaFilePath: $metaFilePath, musicFileName: $musicFileName}';
   }
 }
