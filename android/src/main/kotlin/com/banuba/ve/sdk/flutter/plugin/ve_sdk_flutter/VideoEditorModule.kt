@@ -1,34 +1,37 @@
 package com.banuba.ve.sdk.flutter.plugin.ve_sdk_flutter
 
 import android.app.Application
+import android.content.Context
+import android.util.Log
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import com.banuba.sdk.arcloud.data.source.ArEffectsRepositoryProvider
+import com.banuba.sdk.arcloud.di.ArCloudKoinModule
+import com.banuba.sdk.audiobrowser.autocut.AutoCutTrackLoaderSoundstripe
+import com.banuba.sdk.audiobrowser.data.MubertApiConfig
+import com.banuba.sdk.audiobrowser.di.AudioBrowserKoinModule
+import com.banuba.sdk.audiobrowser.domain.AudioBrowserMusicProvider
+import com.banuba.sdk.audiobrowser.domain.SoundstripeProvider
+import com.banuba.sdk.core.data.TrackData
+import com.banuba.sdk.core.data.autocut.AutoCutTrackLoader
+import com.banuba.sdk.core.domain.DraftConfig
+import com.banuba.sdk.core.ui.ContentFeatureProvider
 import com.banuba.sdk.effectplayer.adapter.BanubaEffectPlayerKoinModule
+import com.banuba.sdk.export.data.ExportParamsProvider
 import com.banuba.sdk.export.di.VeExportKoinModule
 import com.banuba.sdk.gallery.di.GalleryKoinModule
+import com.banuba.sdk.playback.PlayerScaleType
 import com.banuba.sdk.playback.di.VePlaybackSdkKoinModule
+import com.banuba.sdk.ve.data.autocut.AutoCutConfig
 import com.banuba.sdk.ve.di.VeSdkKoinModule
 import com.banuba.sdk.ve.flow.di.VeFlowKoinModule
 import com.banuba.sdk.veui.di.VeUiSdkKoinModule
-import com.banuba.sdk.arcloud.di.ArCloudKoinModule
-import com.banuba.sdk.audiobrowser.di.AudioBrowserKoinModule
-import com.banuba.sdk.arcloud.data.source.ArEffectsRepositoryProvider
-import com.banuba.sdk.audiobrowser.domain.AudioBrowserMusicProvider
-import com.banuba.sdk.core.data.TrackData
-import com.banuba.sdk.core.ui.ContentFeatureProvider
-import com.banuba.sdk.playback.PlayerScaleType
-import com.banuba.sdk.audiobrowser.autocut.AutoCutTrackLoaderSoundstripe
-import com.banuba.sdk.core.data.autocut.AutoCutTrackLoader
-import com.banuba.sdk.core.domain.DraftConfig
-import com.banuba.sdk.ve.data.autocut.AutoCutConfig
-import com.banuba.sdk.audiobrowser.domain.SoundstripeProvider
-import com.banuba.sdk.audiobrowser.data.MubertApiConfig
+import org.json.JSONException
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
+import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import org.koin.core.module.Module
-import android.util.Log
-import org.json.JSONException
 
 class VideoEditorModule {
     internal fun initialize(application: Application, featuresConfig: FeaturesConfig) {
@@ -74,6 +77,18 @@ private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig) {
                 ioDispatcher = get(named("ioDispatcher"))
             )
         }
+        single(named("exportDir")) {
+            get<Context>().getExternalFilesDir("")?.toUri()
+                ?.buildUpon()
+                ?.appendPath("export")
+                ?.build()
+                ?: throw NullPointerException("exportDir cannot be null!")
+        }
+//        factory<ExportParamsProvider> {
+//            CustomExportParamsProvider(
+//                exportDir = get(named("exportDir")),
+//            )
+//        }
         Log.d(
             TAG_FEATURES_CONFIG,
             "Add $INPUT_PARAM_FEATURES_CONFIG with params: ${featuresConfig}"
@@ -113,7 +128,7 @@ private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig) {
 
         if (!featuresConfig.editorConfig.enableVideoAspectFill) {
             factory<PlayerScaleType>(named("editorVideoScaleType")) {
-                    PlayerScaleType.CENTER_INSIDE
+                PlayerScaleType.CENTER_INSIDE
             }
         }
 
@@ -121,10 +136,13 @@ private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig) {
             when (featuresConfig.draftConfig.option) {
                 FEATURES_CONFIG_DRAFT_CONFIG_AUTO ->
                     DraftConfig.ENABLED_SAVE_BY_DEFAULT
+
                 FEATURES_CONFIG_DRAFT_CONFIG_CLOSE_ON_SAVE ->
                     DraftConfig.ENABLED_ASK_IF_SAVE_NOT_EXPORT
+
                 FEATURES_CONFIG_DRAFT_CONFIG_DISABLED ->
                     DraftConfig.DISABLED
+
                 else -> {
                     DraftConfig.ENABLED_ASK_TO_SAVE
                 }

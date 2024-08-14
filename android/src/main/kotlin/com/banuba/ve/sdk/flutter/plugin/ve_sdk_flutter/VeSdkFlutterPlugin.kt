@@ -23,6 +23,7 @@ import android.os.Bundle
 import org.json.JSONObject
 import org.json.JSONException
 import androidx.core.os.bundleOf
+import com.banuba.sdk.ve.flow.export.ExportBundleHelper
 import com.banuba.sdk.veui.data.captions.CaptionsApiService
 
 class VeSdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, ActivityResultListener {
@@ -214,7 +215,9 @@ class VeSdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Acti
         val data = mapOf(
             EXPORTED_VIDEO_SOURCES to videoSources,
             EXPORTED_PREVIEW to previewPath,
-            EXPORTED_META to result.metaUri.toString()
+            EXPORTED_META to result.metaUri.toString(),
+            EXPORTED_MUSTIC_TRACK to ExportBundleHelper.getExportedMusicEffect(result.additionalExportData).first().title
+
         )
         return data
     }
