@@ -6,23 +6,25 @@ class FeaturesConfig {
   final AudioBrowser audioBrowser;
   final EditorConfig editorConfig;
   final DraftConfig draftConfig;
+  final DurationConfig? durationConfig;
 
   FeaturesConfig._builder(FeaturesConfigBuilder builder)
       : aiClipping = builder._aiClipping,
         aiCaptions = builder._aiCaptions,
         audioBrowser = builder._audioBrowser,
         editorConfig = builder._editorConfig,
-        draftConfig = builder._draftConfig;
+        draftConfig = builder._draftConfig,
+        durationConfig = builder._durationConfig;
 }
 
 class FeaturesConfigBuilder {
   AiClipping? _aiClipping;
   AiCaptions? _aiCaptions;
   AudioBrowser _audioBrowser =
-      AudioBrowser.fromSource(AudioBrowserSource.local);
+  AudioBrowser.fromSource(AudioBrowserSource.local);
   EditorConfig _editorConfig = EditorConfig(enableVideoAspectFill: true);
-  DraftConfig _draftConfig =
-      DraftConfig.fromOption(DraftOption.askToSave);
+  DurationConfig _durationConfig = DurationConfig(maximumVideoDuration: 120000, videoDurations: [120000, 60000, 30000, 15000]);
+  DraftConfig _draftConfig = DraftConfig.fromOption(DraftOption.askToSave);
 
   FeaturesConfigBuilder setAiClipping(aiClipping) {
     _aiClipping = aiClipping;
@@ -41,6 +43,12 @@ class FeaturesConfigBuilder {
 
   FeaturesConfigBuilder setEditorConfig(editorConfig) {
     _editorConfig = editorConfig;
+    return this;
+  }
+
+
+  FeaturesConfigBuilder setDurationConfig(durationConfig) {
+    _durationConfig = durationConfig;
     return this;
   }
 
@@ -75,8 +83,8 @@ class AiClipping {
   final String audioTracksUrl;
 
   const AiClipping({
-      required this.audioDataUrl,
-      required this.audioTracksUrl
+    required this.audioDataUrl,
+    required this.audioTracksUrl
   });
 }
 
@@ -87,9 +95,9 @@ class AiCaptions {
   final String apiKey;
 
   const AiCaptions({
-      required this.uploadUrl,
-      required this.transcribeUrl,
-      required this.apiKey
+    required this.uploadUrl,
+    required this.transcribeUrl,
+    required this.apiKey
   });
 }
 
@@ -98,7 +106,18 @@ class EditorConfig {
   final bool? enableVideoAspectFill;
 
   const EditorConfig({
-        this.enableVideoAspectFill
+    this.enableVideoAspectFill
+  });
+}
+
+@immutable
+class DurationConfig {
+  final double? maximumVideoDuration;
+  final List<double>? videoDurations;
+
+  const DurationConfig({
+    this.maximumVideoDuration,
+    this.videoDurations
   });
 }
 

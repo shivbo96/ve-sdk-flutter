@@ -50,7 +50,11 @@ internal const val FEATURES_CONFIG_AUDIO_BROWSER_PARAMS_MUBERT_TOKEN = "mubertTo
 internal const val FEATURES_CONFIG_EDITOR_CONFIG = "editorConfig"
 internal const val FEATURES_CONFIG_EDITOR_CONFIG_ENABLE_VIDEO_ASPECT_FILL = "enableVideoAspectFill"
 
+internal const val FEATURES_CONFIG_DURATION_CONFIG_MAXIMUM_VIDEO_DURATION = "maximumVideoDuration"
+internal const val FEATURES_CONFIG_DURATION_CONFIG_VIDEO_DURATIONS = "videoDurations"
+
 internal const val FEATURES_CONFIG_DRAFT_CONFIG = "draftConfig"
+internal const val FEATURES_CONFIG_DURATION_CONFIG = "durationConfig"
 internal const val FEATURES_CONFIG_DRAFT_CONFIG_OPTION = "option"
 
 internal const val FEATURES_CONFIG_DRAFT_CONFIG_ASK_TO_SAVE = "askToSave"

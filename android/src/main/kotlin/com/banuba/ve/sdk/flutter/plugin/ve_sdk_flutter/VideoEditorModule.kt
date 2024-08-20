@@ -12,12 +12,12 @@ import com.banuba.sdk.audiobrowser.data.MubertApiConfig
 import com.banuba.sdk.audiobrowser.di.AudioBrowserKoinModule
 import com.banuba.sdk.audiobrowser.domain.AudioBrowserMusicProvider
 import com.banuba.sdk.audiobrowser.domain.SoundstripeProvider
+import com.banuba.sdk.cameraui.data.CameraConfig
 import com.banuba.sdk.core.data.TrackData
 import com.banuba.sdk.core.data.autocut.AutoCutTrackLoader
 import com.banuba.sdk.core.domain.DraftConfig
 import com.banuba.sdk.core.ui.ContentFeatureProvider
 import com.banuba.sdk.effectplayer.adapter.BanubaEffectPlayerKoinModule
-import com.banuba.sdk.export.data.ExportParamsProvider
 import com.banuba.sdk.export.di.VeExportKoinModule
 import com.banuba.sdk.gallery.di.GalleryKoinModule
 import com.banuba.sdk.playback.PlayerScaleType
@@ -32,6 +32,7 @@ import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import org.koin.dsl.single
 
 class VideoEditorModule {
     internal fun initialize(application: Application, featuresConfig: FeaturesConfig) {
@@ -84,14 +85,9 @@ private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig) {
                 ?.build()
                 ?: throw NullPointerException("exportDir cannot be null!")
         }
-//        factory<ExportParamsProvider> {
-//            CustomExportParamsProvider(
-//                exportDir = get(named("exportDir")),
-//            )
-//        }
         Log.d(
             TAG_FEATURES_CONFIG,
-            "Add $INPUT_PARAM_FEATURES_CONFIG with params: ${featuresConfig}"
+            "Add $INPUT_PARAM_FEATURES_CONFIG with params: $featuresConfig"
         )
         this.applyFeaturesConfig(featuresConfig)
     }
@@ -122,6 +118,17 @@ private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig) {
             this.single<AutoCutTrackLoader> {
                 AutoCutTrackLoaderSoundstripe(
                     soundstripeApi = get()
+                )
+            }
+        }
+
+        featuresConfig.durationConfig?.let {
+            single() {
+                CameraConfig(
+                    maxRecordedTotalVideoDurationMs = featuresConfig.durationConfig.maximumVideoDuration,
+                    videoDurations = featuresConfig.durationConfig.videoDurations
+//                    maxRecordedTotalVideoDurationMs = 60L,
+//                    videoDurations = mutableListOf(60L,30L)
                 )
             }
         }

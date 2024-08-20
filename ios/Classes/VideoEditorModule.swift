@@ -37,7 +37,12 @@ class VideoEditorModule: VideoEditor {
         }
         
         var config = VideoEditorConfig()
+    
+        config.videoDurationConfiguration.maximumVideoDuration = featuresConfig.durationConfig.maximumVideoDuration
         
+        config.videoDurationConfiguration.videoDurations = featuresConfig.durationConfig.videoDurations
+
+
         config.applyFeatureConfig(featuresConfig)
 
         let lutsPath = Bundle(for: VideoEditorModule.self).bundleURL.appendingPathComponent("luts", isDirectory: true)

@@ -15,6 +15,7 @@ internal fun parseFeaturesConfig(rawConfigParams: String?): FeaturesConfig =
                 featuresConfigObject.extractAiCaptions(),
                 featuresConfigObject.extractAudioBrowser(),
                 featuresConfigObject.extractEditorConfig(),
+                featuresConfigObject.extractCameraConfig(),
                 featuresConfigObject.extractDraftConfig()
             )
         } catch (e: JSONException) {
@@ -77,6 +78,34 @@ private fun JSONObject.extractEditorConfig(): EditorConfig =
         Log.d(TAG, "Missing Editor Config params", e)
         defaultEditorConfig
     } ?: defaultEditorConfig
+
+private fun JSONObject.extractCameraConfig(): CameraConfig =
+    try {
+        this.optJSONObject(FEATURES_CONFIG_DURATION_CONFIG)?.let { json ->
+
+            // Extract maximum video duration as a Long
+            val maximumVideoDuration = json.optLong(FEATURES_CONFIG_DURATION_CONFIG_MAXIMUM_VIDEO_DURATION)
+
+            // Extract video durations as a JSONArray and convert to List<Long>
+            val videoDurationsJsonArray = json.optJSONArray(FEATURES_CONFIG_DURATION_CONFIG_VIDEO_DURATIONS)
+            val videoDurations = mutableListOf<Long>()
+
+            if (videoDurationsJsonArray != null) {
+                for (i in 0 until videoDurationsJsonArray.length()) {
+                    videoDurations.add(videoDurationsJsonArray.getLong(i))
+                }
+            }
+
+            CameraConfig(
+                maximumVideoDuration = maximumVideoDuration,
+                videoDurations = videoDurations
+            )
+        }
+    } catch (e: JSONException) {
+        Log.d(TAG, "Missing Editor Duration params", e)
+        defaultDurationConfig
+    } ?: defaultDurationConfig
+
 
 private fun JSONObject.extractDraftConfig(): DraftConfig =
     try {

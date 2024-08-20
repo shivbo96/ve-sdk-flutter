@@ -48,6 +48,8 @@ class _HomePageState extends State<HomePage> {
 
     final config = FeaturesConfigBuilder()
         .setDraftConfig(DraftConfig.fromOption(DraftOption.disabled))
+        // Video Duration should be in milliseconds
+        .setDurationConfig(const DurationConfig(maximumVideoDuration: 60000, videoDurations: [60000, 30000, 15000]))
         // .setAiCaptions(const AiCaptions(uploadUrl: "uploadUrl", transcribeUrl: "transcribeUrl", apiKey: "apiKey"))
         .build();
     try {
@@ -59,13 +61,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _startVideoEditorInPipMode() async {
-
     // Specify your Config params in the builder below
 
     final config = FeaturesConfigBuilder()
-      .setAudioBrowser(AudioBrowser.fromSource(AudioBrowserSource.local))
-      // ...
-      .build();
+        .setAudioBrowser(AudioBrowser.fromSource(AudioBrowserSource.local))
+        // ...
+        .build();
     final ImagePicker picker = ImagePicker();
     final videoFile = await picker.pickVideo(source: ImageSource.gallery);
 

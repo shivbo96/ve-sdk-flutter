@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:ve_sdk_flutter/features_config.dart';
 
 extension FeatureConfigSerializer on FeaturesConfig {
@@ -8,7 +9,8 @@ extension FeatureConfigSerializer on FeaturesConfig {
       'aiCaptions': aiCaptions?._serialize(),
       'audioBrowser': audioBrowser._serialize(),
       'editorConfig': editorConfig._serialize(),
-      'draftConfig': draftConfig._serialize()
+      'draftConfig': draftConfig._serialize(),
+      'durationConfig': durationConfig?._serialize()
     };
     return jsonEncode(configMap);
   }
@@ -44,9 +46,13 @@ extension AudioBrowserSerializer on AudioBrowser {
 
 extension EditorConfigSerializer on EditorConfig {
   Map<String, dynamic> _serialize() {
-    return {
-      'enableVideoAspectFill': enableVideoAspectFill
-    };
+    return {'enableVideoAspectFill': enableVideoAspectFill};
+  }
+}
+
+extension DurationConfigSerializer on DurationConfig {
+  Map<String, dynamic> _serialize() {
+    return {'videoDurations': videoDurations, 'maximumVideoDuration': maximumVideoDuration};
   }
 }
 

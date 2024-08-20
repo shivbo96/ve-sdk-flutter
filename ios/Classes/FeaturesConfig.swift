@@ -6,6 +6,7 @@ struct FeaturesConfig: Codable {
     let audioBrowser: AudioBrowser
     let editorConfig: EditorConfig
     let draftConfig: DraftConfig
+    let durationConfig: DurationConfig
 }
 
 struct AiClipping: Codable {
@@ -31,6 +32,11 @@ struct Params: Codable {
 
 struct EditorConfig: Codable {
     let enableVideoAspectFill: Bool
+}
+
+struct DurationConfig: Codable {
+    let maximumVideoDuration: Double
+    let videoDurations:Array<Double>
 }
 
 struct DraftConfig: Codable {

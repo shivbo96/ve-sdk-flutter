@@ -7,6 +7,7 @@ internal data class FeaturesConfig(
     val aiCaptions: AiCaptions? = null,
     val audioBrowser: AudioBrowser = defaultAudioBrowser,
     val editorConfig: EditorConfig = defaultEditorConfig,
+    val durationConfig: CameraConfig = defaultDurationConfig,
     val draftConfig: DraftConfig = defaultDraftConfig
 )
 
@@ -35,8 +36,18 @@ internal data class EditorConfig(
     val enableVideoAspectFill: Boolean
 )
 
+internal data class CameraConfig(
+    val maximumVideoDuration: Long,
+    val videoDurations: List<Long>
+)
+
 internal val defaultEditorConfig = EditorConfig(
     enableVideoAspectFill = true
+)
+
+internal val defaultDurationConfig = CameraConfig(
+    maximumVideoDuration = 120_000L,
+    videoDurations = mutableListOf(120_000L, 60_000L, 30_000L, 15_000L)
 )
 
 internal data class DraftConfig(
