@@ -84,8 +84,8 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.22"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.8.22"
     
     def banubaSdkVersion = '1.36.4'
     implementation "com.banuba.sdk:ffmpeg:5.1.3"
