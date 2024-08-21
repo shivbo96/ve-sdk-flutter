@@ -33,7 +33,8 @@ internal val defaultAudioBrowser = AudioBrowser(
 )
 
 internal data class EditorConfig(
-    val enableVideoAspectFill: Boolean
+    val enableVideoAspectFill: Boolean,
+    val enableVideoCover: Boolean
 )
 
 internal data class CameraConfig(
@@ -42,7 +43,8 @@ internal data class CameraConfig(
 )
 
 internal val defaultEditorConfig = EditorConfig(
-    enableVideoAspectFill = true
+    enableVideoAspectFill = true,
+    enableVideoCover = true
 )
 
 internal val defaultDurationConfig = CameraConfig(

@@ -41,7 +41,9 @@ class VideoEditorModule: VideoEditor {
         config.videoDurationConfiguration.maximumVideoDuration = featuresConfig.durationConfig.maximumVideoDuration
         
         config.videoDurationConfiguration.videoDurations = featuresConfig.durationConfig.videoDurations
-
+        
+        config.featureConfiguration.isVideoCoverSelectionEnabled = featuresConfig.editorConfig.enableVideoCover
+        
 
         config.applyFeatureConfig(featuresConfig)
 

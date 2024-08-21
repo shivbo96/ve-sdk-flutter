@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Banuba Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -46,12 +47,17 @@ class _HomePageState extends State<HomePage> {
   Future<void> _startVideoEditorInCameraMode() async {
     // Specify your Config params in the builder below
 
-    final config = FeaturesConfigBuilder()
-        .setDraftConfig(DraftConfig.fromOption(DraftOption.disabled))
-        // Video Duration should be in milliseconds
-        .setDurationConfig(const DurationConfig(maximumVideoDuration: 60000, videoDurations: [60000, 30000, 15000]))
-        // .setAiCaptions(const AiCaptions(uploadUrl: "uploadUrl", transcribeUrl: "transcribeUrl", apiKey: "apiKey"))
-        .build();
+    final FeaturesConfigBuilder configBuilder =
+        FeaturesConfigBuilder().setDraftConfig(DraftConfig.fromOption(DraftOption.disabled)).setEditorConfig(const EditorConfig(enableVideoCover: false));
+
+    final DurationConfig durationConfig = Platform.isAndroid
+        ? const DurationConfig(videoDurations: [60000, 30000, 15000], maximumVideoDuration: 60000)
+        : const DurationConfig(videoDurations: [60, 30, 15], maximumVideoDuration: 60);
+
+    configBuilder.setDurationConfig(durationConfig);
+
+    final FeaturesConfig config = configBuilder.build();
+
     try {
       dynamic exportResult = await _veSdkFlutterPlugin.openCameraScreen(_licenseToken, config);
       _handleExportResult(exportResult);

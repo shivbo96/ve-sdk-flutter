@@ -26,13 +26,13 @@ import com.banuba.sdk.ve.data.autocut.AutoCutConfig
 import com.banuba.sdk.ve.di.VeSdkKoinModule
 import com.banuba.sdk.ve.flow.di.VeFlowKoinModule
 import com.banuba.sdk.veui.di.VeUiSdkKoinModule
+import com.banuba.sdk.veui.domain.CoverProvider
 import org.json.JSONException
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import org.koin.dsl.single
 
 class VideoEditorModule {
     internal fun initialize(application: Application, featuresConfig: FeaturesConfig) {
@@ -122,20 +122,22 @@ private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig) {
             }
         }
 
-        featuresConfig.durationConfig?.let {
-            single() {
-                CameraConfig(
-                    maxRecordedTotalVideoDurationMs = featuresConfig.durationConfig.maximumVideoDuration,
-                    videoDurations = featuresConfig.durationConfig.videoDurations
-//                    maxRecordedTotalVideoDurationMs = 60L,
-//                    videoDurations = mutableListOf(60L,30L)
-                )
-            }
+        single {
+            CameraConfig(
+                maxRecordedTotalVideoDurationMs = featuresConfig.durationConfig.maximumVideoDuration,
+                videoDurations = featuresConfig.durationConfig.videoDurations
+            )
         }
 
         if (!featuresConfig.editorConfig.enableVideoAspectFill) {
             factory<PlayerScaleType>(named("editorVideoScaleType")) {
                 PlayerScaleType.CENTER_INSIDE
+            }
+        }
+
+        if (!featuresConfig.editorConfig.enableVideoCover) {
+            single<CoverProvider> {
+                CoverProvider.NONE
             }
         }
 

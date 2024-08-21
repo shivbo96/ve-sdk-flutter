@@ -32,6 +32,7 @@ struct Params: Codable {
 
 struct EditorConfig: Codable {
     let enableVideoAspectFill: Bool
+    let enableVideoCover: Bool
 }
 
 struct DurationConfig: Codable {

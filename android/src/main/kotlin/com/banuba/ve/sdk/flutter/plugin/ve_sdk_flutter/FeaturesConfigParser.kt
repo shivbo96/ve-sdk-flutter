@@ -71,6 +71,9 @@ private fun JSONObject.extractEditorConfig(): EditorConfig =
             EditorConfig(
                 enableVideoAspectFill = json.optBoolean(
                     FEATURES_CONFIG_EDITOR_CONFIG_ENABLE_VIDEO_ASPECT_FILL
+                ),
+                enableVideoCover = json.optBoolean(
+                    FEATURES_CONFIG_EDITOR_CONFIG_ENABLE_VIDEO_COVER
                 )
             )
         }

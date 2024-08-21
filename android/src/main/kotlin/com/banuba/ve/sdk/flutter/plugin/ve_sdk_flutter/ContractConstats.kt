@@ -49,6 +49,7 @@ internal const val FEATURES_CONFIG_AUDIO_BROWSER_PARAMS_MUBERT_TOKEN = "mubertTo
 
 internal const val FEATURES_CONFIG_EDITOR_CONFIG = "editorConfig"
 internal const val FEATURES_CONFIG_EDITOR_CONFIG_ENABLE_VIDEO_ASPECT_FILL = "enableVideoAspectFill"
+internal const val FEATURES_CONFIG_EDITOR_CONFIG_ENABLE_VIDEO_COVER = "enableVideoCover"
 
 internal const val FEATURES_CONFIG_DURATION_CONFIG_MAXIMUM_VIDEO_DURATION = "maximumVideoDuration"
 internal const val FEATURES_CONFIG_DURATION_CONFIG_VIDEO_DURATIONS = "videoDurations"

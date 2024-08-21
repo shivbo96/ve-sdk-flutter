@@ -23,7 +23,7 @@ class FeaturesConfigBuilder {
   AiClipping? _aiClipping;
   AiCaptions? _aiCaptions;
   AudioBrowser _audioBrowser = AudioBrowser.fromSource(AudioBrowserSource.local);
-  EditorConfig _editorConfig = const EditorConfig(enableVideoAspectFill: true);
+  EditorConfig _editorConfig = const EditorConfig(enableVideoAspectFill: true, enableVideoCover: true);
   DurationConfig _durationConfig = Platform.isAndroid
       ? const DurationConfig(maximumVideoDuration: 120000, videoDurations: [120000, 60000, 30000, 15000])
       : const DurationConfig(maximumVideoDuration: 120, videoDurations: [120, 60, 30, 15]);
@@ -98,8 +98,9 @@ class AiCaptions {
 @immutable
 class EditorConfig {
   final bool? enableVideoAspectFill;
+  final bool? enableVideoCover;
 
-  const EditorConfig({this.enableVideoAspectFill});
+  const EditorConfig({this.enableVideoAspectFill = true, this.enableVideoCover = true});
 }
 
 @immutable
