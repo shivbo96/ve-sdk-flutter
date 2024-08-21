@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class FeaturesConfig {
@@ -20,10 +22,11 @@ class FeaturesConfig {
 class FeaturesConfigBuilder {
   AiClipping? _aiClipping;
   AiCaptions? _aiCaptions;
-  AudioBrowser _audioBrowser =
-  AudioBrowser.fromSource(AudioBrowserSource.local);
-  EditorConfig _editorConfig = EditorConfig(enableVideoAspectFill: true);
-  DurationConfig _durationConfig = DurationConfig(maximumVideoDuration: 120000, videoDurations: [120000, 60000, 30000, 15000]);
+  AudioBrowser _audioBrowser = AudioBrowser.fromSource(AudioBrowserSource.local);
+  EditorConfig _editorConfig = const EditorConfig(enableVideoAspectFill: true);
+  DurationConfig _durationConfig = Platform.isAndroid
+      ? const DurationConfig(maximumVideoDuration: 120000, videoDurations: [120000, 60000, 30000, 15000])
+      : const DurationConfig(maximumVideoDuration: 120, videoDurations: [120, 60, 30, 15]);
   DraftConfig _draftConfig = DraftConfig.fromOption(DraftOption.askToSave);
 
   FeaturesConfigBuilder setAiClipping(aiClipping) {
@@ -45,7 +48,6 @@ class FeaturesConfigBuilder {
     _editorConfig = editorConfig;
     return this;
   }
-
 
   FeaturesConfigBuilder setDurationConfig(durationConfig) {
     _durationConfig = durationConfig;
@@ -71,8 +73,7 @@ class AudioBrowser {
 
   const AudioBrowser._({required this.source, this.params});
 
-  factory AudioBrowser.fromSource(AudioBrowserSource source,
-      {Map<String, dynamic>? params}) {
+  factory AudioBrowser.fromSource(AudioBrowserSource source, {Map<String, dynamic>? params}) {
     return AudioBrowser._(source: source, params: params);
   }
 }
@@ -82,10 +83,7 @@ class AiClipping {
   final String audioDataUrl;
   final String audioTracksUrl;
 
-  const AiClipping({
-    required this.audioDataUrl,
-    required this.audioTracksUrl
-  });
+  const AiClipping({required this.audioDataUrl, required this.audioTracksUrl});
 }
 
 @immutable
@@ -94,20 +92,14 @@ class AiCaptions {
   final String transcribeUrl;
   final String apiKey;
 
-  const AiCaptions({
-    required this.uploadUrl,
-    required this.transcribeUrl,
-    required this.apiKey
-  });
+  const AiCaptions({required this.uploadUrl, required this.transcribeUrl, required this.apiKey});
 }
 
 @immutable
 class EditorConfig {
   final bool? enableVideoAspectFill;
 
-  const EditorConfig({
-    this.enableVideoAspectFill
-  });
+  const EditorConfig({this.enableVideoAspectFill});
 }
 
 @immutable
@@ -115,10 +107,7 @@ class DurationConfig {
   final double? maximumVideoDuration;
   final List<double>? videoDurations;
 
-  const DurationConfig({
-    this.maximumVideoDuration,
-    this.videoDurations
-  });
+  const DurationConfig({this.maximumVideoDuration, this.videoDurations});
 }
 
 enum DraftOption { askToSave, closeOnSave, auto, disabled }
