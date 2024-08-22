@@ -44,6 +44,22 @@ class VideoEditorModule: VideoEditor {
         
         config.featureConfiguration.isVideoCoverSelectionEnabled = featuresConfig.editorConfig.enableVideoCover
         
+        
+        config.editorConfiguration.saveButton = BanubaButtonConfiguration(
+                  title: TextButtonConfiguration(
+                    style: BanubaUtilities.TextConfiguration(
+                      font: UIFont.systemFont(ofSize: 16.0), // Set the font size or use another UIFont method
+                      color: UIColor.black // Set the color, replace with the desired UIColor
+                    ),
+                    text: featuresConfig.editorConfig.saveButtonText
+                  ),
+                  width:70,
+                  height:35,
+                  background: BanubaUtilities.BackgroundConfiguration(
+                    cornerRadius: 18.0 ,// Set the corner radius for the button
+                    color: UIColor.white // Set the background color, replace with the desired UIColor
+                  )
+                );
 
         config.applyFeatureConfig(featuresConfig)
 

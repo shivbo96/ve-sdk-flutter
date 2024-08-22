@@ -99,8 +99,9 @@ class AiCaptions {
 class EditorConfig {
   final bool? enableVideoAspectFill;
   final bool? enableVideoCover;
+  final String? saveButtonText;
 
-  const EditorConfig({this.enableVideoAspectFill = true, this.enableVideoCover = true});
+  const EditorConfig({this.enableVideoAspectFill = true, this.enableVideoCover = true, this.saveButtonText = 'Next'});
 }
 
 @immutable

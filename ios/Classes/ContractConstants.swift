@@ -60,7 +60,7 @@ extension VeSdkFlutterPlugin {
     
     //Empty feature config
     var emptyFeaturesConfig : FeaturesConfig {
-        return FeaturesConfig(aiCaptions: nil, aiClipping: nil, audioBrowser: AudioBrowser(source: "local", params: nil), editorConfig: EditorConfig(enableVideoAspectFill: true,enableVideoCover: true), draftConfig: DraftConfig(option: "enable"),durationConfig: DurationConfig(maximumVideoDuration: 120, videoDurations:  [120.0,60.0, 30.0, 15.0]))
+        return FeaturesConfig(aiCaptions: nil, aiClipping: nil, audioBrowser: AudioBrowser(source: "local", params: nil), editorConfig: EditorConfig(enableVideoAspectFill: true,enableVideoCover: true,saveButtonText: "Next"), draftConfig: DraftConfig(option: "enable"),durationConfig: DurationConfig(maximumVideoDuration: 120, videoDurations:  [120.0,60.0, 30.0, 15.0]))
     }
 }
 
