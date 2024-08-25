@@ -259,7 +259,7 @@ extension VideoEditorModule {
                     VeSdkFlutterPlugin.argExportedVideoSources: videoUrls.compactMap { $0.path },
                     VeSdkFlutterPlugin.argExportedPreview: previewUrl.path,
                     VeSdkFlutterPlugin.argExportedMeta: metaUrl?.path,
-                    VeSdkFlutterPlugin.musicFileName: self.videoEditorSDK?.musicTrack?.title
+                    VeSdkFlutterPlugin.musicFileName: self.videoEditorSDK?.musicMetadata?.tracks.first?.title
                 ]
                 print("data \(data)")
                 self.flutterResult?(data)
