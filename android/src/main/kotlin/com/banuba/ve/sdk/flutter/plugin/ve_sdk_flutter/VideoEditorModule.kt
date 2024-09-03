@@ -22,6 +22,9 @@ import com.banuba.sdk.export.di.VeExportKoinModule
 import com.banuba.sdk.gallery.di.GalleryKoinModule
 import com.banuba.sdk.playback.PlayerScaleType
 import com.banuba.sdk.playback.di.VePlaybackSdkKoinModule
+import com.banuba.sdk.ve.data.EditorAspectSettings
+import com.banuba.sdk.ve.data.aspect.AspectSettings
+import com.banuba.sdk.ve.data.aspect.AspectsProvider
 import com.banuba.sdk.ve.data.autocut.AutoCutConfig
 import com.banuba.sdk.ve.di.VeSdkKoinModule
 import com.banuba.sdk.ve.flow.di.VeFlowKoinModule
@@ -132,6 +135,18 @@ private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig) {
         if (!featuresConfig.editorConfig.enableVideoAspectFill) {
             factory<PlayerScaleType>(named("editorVideoScaleType")) {
                 PlayerScaleType.CENTER_INSIDE
+            }
+        }
+
+        single<AspectsProvider> {
+            object : AspectsProvider{
+                override var availableAspects: List<AspectSettings> = listOf()
+                override fun provide(): AspectsProvider.AspectsData {
+                    return AspectsProvider.AspectsData(
+                        allAspects = availableAspects,
+                        default = EditorAspectSettings.Original()
+                    )
+                }
             }
         }
 

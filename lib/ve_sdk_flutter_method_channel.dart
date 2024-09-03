@@ -30,7 +30,7 @@ class MethodChannelVeSdkFlutter extends VeSdkFlutterPlatform {
   static const String _musicFileName = 'musicFileName';
 
   /// The method channel used to interact with the native platform.
-  @visibleForTesting
+  // @visibleForTesting
   final methodChannel = const MethodChannel(_channelName);
 
   @override

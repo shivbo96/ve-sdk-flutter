@@ -41,9 +41,8 @@ class VideoEditorModule: VideoEditor {
         config.videoDurationConfiguration.maximumVideoDuration = featuresConfig.durationConfig.maximumVideoDuration
         
         config.videoDurationConfiguration.videoDurations = featuresConfig.durationConfig.videoDurations
-        
         config.featureConfiguration.isVideoCoverSelectionEnabled = featuresConfig.editorConfig.enableVideoCover
-        
+        config.featureConfiguration.isAspectsEnabled = false
         
         config.editorConfiguration.saveButton = BanubaButtonConfiguration(
                   title: TextButtonConfiguration(

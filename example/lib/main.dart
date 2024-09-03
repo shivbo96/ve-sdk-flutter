@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
     // Specify your Config params in the builder below
 
     final FeaturesConfigBuilder configBuilder =
-        FeaturesConfigBuilder().setDraftConfig(DraftConfig.fromOption(DraftOption.disabled)).setEditorConfig(const EditorConfig(enableVideoCover: false,saveButtonText: "Post"));
+        FeaturesConfigBuilder().setDraftConfig(DraftConfig.fromOption(DraftOption.disabled)).setEditorConfig(const EditorConfig(enableVideoCover: false,saveButtonText: "Post",enableVideoAspectFill: false));
 
     final DurationConfig durationConfig = Platform.isAndroid
         ? const DurationConfig(videoDurations: [60000, 30000, 15000], maximumVideoDuration: 60000)

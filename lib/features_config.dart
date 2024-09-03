@@ -66,7 +66,7 @@ class FeaturesConfigBuilder {
 
 enum AudioBrowserSource { soundstripe, local, mubert }
 
-@immutable
+// @immutable
 class AudioBrowser {
   final AudioBrowserSource source;
   final Map<String, dynamic>? params;
@@ -78,7 +78,7 @@ class AudioBrowser {
   }
 }
 
-@immutable
+// @immutable
 class AiClipping {
   final String audioDataUrl;
   final String audioTracksUrl;
@@ -86,7 +86,7 @@ class AiClipping {
   const AiClipping({required this.audioDataUrl, required this.audioTracksUrl});
 }
 
-@immutable
+// @immutable
 class AiCaptions {
   final String uploadUrl;
   final String transcribeUrl;
@@ -95,7 +95,7 @@ class AiCaptions {
   const AiCaptions({required this.uploadUrl, required this.transcribeUrl, required this.apiKey});
 }
 
-@immutable
+// @immutable
 class EditorConfig {
   final bool? enableVideoAspectFill;
   final bool? enableVideoCover;
@@ -104,7 +104,7 @@ class EditorConfig {
   const EditorConfig({this.enableVideoAspectFill = true, this.enableVideoCover = true, this.saveButtonText = 'Next'});
 }
 
-@immutable
+// @immutable
 class DurationConfig {
   final double? maximumVideoDuration;
   final List<double>? videoDurations;
@@ -114,7 +114,7 @@ class DurationConfig {
 
 enum DraftOption { askToSave, closeOnSave, auto, disabled }
 
-@immutable
+// @immutable
 class DraftConfig {
   final DraftOption option;
 
