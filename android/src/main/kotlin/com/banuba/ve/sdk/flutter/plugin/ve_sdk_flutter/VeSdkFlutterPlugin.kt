@@ -10,6 +10,7 @@ import com.banuba.sdk.core.license.BanubaVideoEditor
 import com.banuba.sdk.export.data.ExportResult
 import com.banuba.sdk.export.utils.EXTRA_EXPORTED_SUCCESS
 import com.banuba.sdk.ve.flow.VideoCreationActivity
+import com.banuba.sdk.ve.flow.export.ExportBundleHelper
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -19,12 +20,6 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.ActivityResultListener
 import java.io.File
-import android.os.Bundle
-import org.json.JSONObject
-import org.json.JSONException
-import androidx.core.os.bundleOf
-import com.banuba.sdk.ve.flow.export.ExportBundleHelper
-import com.banuba.sdk.veui.data.captions.CaptionsApiService
 
 class VeSdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, ActivityResultListener {
     companion object {
@@ -212,11 +207,17 @@ class VeSdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Acti
     private fun prepareVideoExportData(result: ExportResult.Success): Map<String, Any?> {
         val videoSources = result.videoList.map { it.sourceUri.toString() }
         val previewPath = result.preview.toString()
+        val musicEffects = ExportBundleHelper.getExportedMusicEffect(result.additionalExportData)
+        val musicEffectTitle = if (musicEffects.isNullOrEmpty()) {
+            "" // Provide a default value or handle the case as needed
+        } else {
+            musicEffects.first().title
+        }
         val data = mapOf(
             EXPORTED_VIDEO_SOURCES to videoSources,
             EXPORTED_PREVIEW to previewPath,
             EXPORTED_META to result.metaUri.toString(),
-            EXPORTED_MUSTIC_TRACK to ExportBundleHelper.getExportedMusicEffect(result.additionalExportData).first().title
+            EXPORTED_MUSTIC_TRACK to musicEffectTitle
 
         )
         return data
