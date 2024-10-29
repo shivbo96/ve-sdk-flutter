@@ -9,7 +9,7 @@ import 'package:ve_sdk_flutter/features_config.dart';
 import 'package:ve_sdk_flutter/ve_sdk_flutter.dart';
 
 const _licenseToken =
-    'Qk5CIN+7a/vZLTpKcGY94c/BaL7StVfhFsUNbPvJ3g/64rZhPg32vJF/buyNmDWrxbuhBAUOpQxM13lPvQB1vUHxikoVNrL5olc7ocGKKm8uiOe1TPuXfMeX0IH3CEe33zxX8UX+Xu63pLrLiLoXSoxGjwEVNCXfui33JhMR0XQLQ/EVgVe408BSaSsJIRe6nmbxZjmp7gY2qzfZO17fNR92gp7LecQpj/Y9QAjFHcLrr0RkelTIPRgw+gKIWbRjlYP55QoROHiKJZtzjmlTI/51BSWMBjVE5UWwGmHVRgd3NrDNuiqKdqBL+rGg0OC1EgzLJRlEZtQbTxyzug17hLlOpIrTPoshfB2UEom67QDeUDoznGbtFs1OcOZUBl8XE4Z7raKLJj5LK80mpydONPZ/NthY84JOvpRTrr7at62U8j166edtSjr9y07cwEJCUOU9ahfKYhzWBwdmaNxzmMHqc2CF8OW7OcfL20O/OcFU4cJUZX3YH11oMUYJXPiiOeqQDtdos1ANsa72LPhus0bmEZ6WLXDnQTh4yi7a6Hnw82JtjrEjnXtPJPXlwqO520aESisXjJlsnnONfY3hBJQ9SUhWXp2gqaUUnIphmRJvm1GCcOxgiYDm9+x7pDro9OU=';
+    '';
 
 void main() {
   runApp(const MyApp());
