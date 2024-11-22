@@ -343,10 +343,21 @@ extension VideoEditorConfig {
         }
             
             
-        if let aiClipping = featuresConfig.aiClipping {
-            self.autoCutConfiguration.embeddingsDownloadUrl = aiClipping.audioDataUrl
-            self.autoCutConfiguration.musicApiSelectedTracksUrl = aiClipping.audioTracksUrl
-        }
+//         if let aiClipping = featuresConfig.aiClipping {
+//             self.autoCutConfiguration.embeddingsDownloadUrl = aiClipping.audioDataUrl
+//             self.autoCutConfiguration.musicApiSelectedTracksUrl = aiClipping.audioTracksUrl
+//         }
+
+           if let aiClipping = featuresConfig.aiClipping, let audioTracksUrl = URL(string: aiClipping.audioTracksUrl) {
+                    self.autoCutConfiguration.embeddingsDownloadUrl = aiClipping.audioDataUrl
+//                     self.autoCutConfiguration.musicProvider =
+//                         switch featuresConfig.audioBrowser.value() {
+//                             case .banubaMusic:
+//                                 .banubaMusic(tracksURL: audioTracksUrl)
+//                             default:
+//                                 .soundstripe(tracksURL: audioTracksUrl)
+//                         }
+                }
 
         self.editorConfiguration.isVideoAspectFillEnabled = featuresConfig.editorConfig.enableVideoAspectFill
 
