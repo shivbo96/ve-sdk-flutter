@@ -22,15 +22,20 @@ extension VeSdkFlutterPlugin {
     static let inputParamFeaturesConfig = "featuresConfig"
     static let inputParamScreen = "screen"
     static let inputParamVideoSources = "videoSources"
+    static let inputParamDraftIndex = "draftIndex"
     
     static let screenCamera = "camera"
     static let screenPip = "pip"
     static let screenTrimmer = "trimmer"
+    static let getAllDraft = "getAllDraft"
+    static let removeDraft = "removeDraft"
+    static let editor = "editor"
     
     static let argExportedVideoSources = "exportedVideoSources"
     static let argExportedPreview = "exportedPreview"
     static let argExportedMeta = "exportedMeta"
     static let musicFileName = "musicFileName"
+    static let draftPreviewImage = "draftPreviewImage"
 
     static let errMessageSdkNotInitialized = """
         Failed to initialize SDK!!!

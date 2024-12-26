@@ -20,6 +20,13 @@ protocol VideoEditor {
     func openVideoEditorPIP(fromViewController controller: FlutterViewController, videoURL: URL, flutterResult: @escaping FlutterResult)
     
     func openVideoEditorTrimmer(fromViewController controller: FlutterViewController, videoSources: Array<URL>, flutterResult: @escaping FlutterResult)
+    
+    func getAllDraftsList(flutterResult: @escaping FlutterResult)
+    
+    func removeDraftFromList(draftIndex:Int,flutterResult: @escaping FlutterResult)
+    
+    func openEditor(draftIndex:Int,fromViewController controller: FlutterViewController, flutterResult: @escaping FlutterResult)
+
 }
 
 class VideoEditorModule: VideoEditor {
@@ -44,6 +51,7 @@ class VideoEditorModule: VideoEditor {
         config.featureConfiguration.isVideoCoverSelectionEnabled = featuresConfig.editorConfig.enableVideoCover
         config.featureConfiguration.isAspectsEnabled = false
         
+    
         config.editorConfiguration.saveButton = BanubaButtonConfiguration(
                   title: TextButtonConfiguration(
                     style: BanubaUtilities.TextConfiguration(
@@ -105,6 +113,83 @@ class VideoEditorModule: VideoEditor {
         checkLicenseAndStartVideoEditor(with: config, flutterResult: flutterResult)
     }
     
+    func openEditor(
+        draftIndex:Int,
+        fromViewController controller: FlutterViewController,
+        flutterResult: @escaping FlutterResult
+    ) {
+        self.flutterResult = flutterResult
+        checkLicenseAndOpenEditor(draftIndex: draftIndex,fromViewController: controller,flutterResult: flutterResult)
+    }
+    
+    
+    func checkLicenseAndOpenEditor( draftIndex:Int,fromViewController controller: FlutterViewController,flutterResult: @escaping FlutterResult) {
+        if videoEditorSDK == nil {
+            flutterResult(FlutterError(code: VeSdkFlutterPlugin.errSdkNotInitialized, message: VeSdkFlutterPlugin.errMessageSdkNotInitialized, details: nil))
+            return
+        }
+        
+        // Checking the license might take around 1 sec in the worst case.
+        // Please optimize use if this method in your application for the best user experience
+        videoEditorSDK?.getLicenseState(completion: { [weak self] isValid in
+            guard let self else { return }
+            if isValid {
+                print("✅ The license is active")
+                DispatchQueue.main.async {
+                    
+                    let drafts = self.videoEditorSDK?.draftsService.getDrafts() // Get drafts list
+                    guard let draft = drafts?[draftIndex] else {return}
+                    
+                    
+                    // Open Video Editor with preselected draft
+                    let draftedConfig = VideoEditorLaunchConfig.DraftedLaunchConfig(
+                      // Choosen draft from list of drafts
+                      externalDraft: draft,
+                      // Any case from DraftsFeatureConfig entity
+                      draftsConfig: .enabled
+                    )
+                    
+                    
+                    let config = VideoEditorLaunchConfig(
+                      entryPoint: .editor,
+                      hostController: controller,
+                      draftedLaunchConfig: draftedConfig,
+                      animated: true
+                    )
+                    
+                    self.videoEditorSDK?.presentVideoEditor(
+                        withLaunchConfiguration: config,
+                        completion: nil
+                    )
+                }
+            } else {
+                if self.restoreLastVideoEditingSession == false {
+                    self.videoEditorSDK?.clearSessionData()
+                }
+                self.videoEditorSDK = nil
+                print("❌ Use of SDK is restricted: the license is revoked or expired")
+                flutterResult(FlutterError(code: VeSdkFlutterPlugin.errLicenseRevoked, message: VeSdkFlutterPlugin.errMessageLicenseRevoked, details: nil))
+            }
+        })
+    }
+    
+    
+    func getAllDraftsList(
+        flutterResult: @escaping FlutterResult
+    ) {
+        self.flutterResult = flutterResult
+        checkLicenseAndGetAllDraftList( flutterResult: flutterResult)
+    }
+    
+    
+    func removeDraftFromList(
+        draftIndex:Int,
+        flutterResult: @escaping FlutterResult
+    ) {
+        self.flutterResult = flutterResult
+        checkLicenseAndRemoveDraftFromList(draftIndex: draftIndex, flutterResult: flutterResult)
+    }
+    
     func openVideoEditorPIP(
         fromViewController controller: FlutterViewController,
         videoURL: URL,
@@ -139,6 +224,88 @@ class VideoEditorModule: VideoEditor {
         )
         
         checkLicenseAndStartVideoEditor(with: trimmerLaunchConfig, flutterResult: flutterResult)
+    }
+    
+    
+    func checkLicenseAndRemoveDraftFromList( draftIndex:Int,flutterResult: @escaping FlutterResult) {
+        if videoEditorSDK == nil {
+            flutterResult(FlutterError(code: VeSdkFlutterPlugin.errSdkNotInitialized, message: VeSdkFlutterPlugin.errMessageSdkNotInitialized, details: nil))
+            return
+        }
+        
+        // Checking the license might take around 1 sec in the worst case.
+        // Please optimize use if this method in your application for the best user experience
+        videoEditorSDK?.getLicenseState(completion: { [weak self] isValid in
+            guard let self else { return }
+            if isValid {
+                print("✅ The license is active")
+                DispatchQueue.main.async {
+                    let drafts = self.videoEditorSDK?.draftsService.getDrafts() // Get drafts list
+                    guard let item = drafts?[draftIndex] else {return}
+    
+                    let isDeleted = self.videoEditorSDK?.draftsService.removeExternalDraft(item)
+
+                    
+                   
+                  
+                    print("data \(isDeleted ?? false)")
+                    self.flutterResult?(isDeleted ?? false)
+                }
+
+            } else {
+                if self.restoreLastVideoEditingSession == false {
+                    self.videoEditorSDK?.clearSessionData()
+                }
+                self.videoEditorSDK = nil
+                print("❌ Use of SDK is restricted: the license is revoked or expired")
+                flutterResult(FlutterError(code: VeSdkFlutterPlugin.errLicenseRevoked, message: VeSdkFlutterPlugin.errMessageLicenseRevoked, details: nil))
+            }
+        })
+    }
+    
+    
+    
+    func checkLicenseAndGetAllDraftList( flutterResult: @escaping FlutterResult) {
+        if videoEditorSDK == nil {
+            flutterResult(FlutterError(code: VeSdkFlutterPlugin.errSdkNotInitialized, message: VeSdkFlutterPlugin.errMessageSdkNotInitialized, details: nil))
+            return
+        }
+        
+        // Checking the license might take around 1 sec in the worst case.
+        // Please optimize use if this method in your application for the best user experience
+        videoEditorSDK?.getLicenseState(completion: { [weak self] isValid in
+            guard let self else { return }
+            if isValid {
+                print("✅ The license is active")
+                DispatchQueue.main.async {
+                    let drafts = self.videoEditorSDK?.draftsService.getDrafts() // Get drafts list
+            
+                    var draftPreviewImage: [String] = []
+                    print("drafts length \(drafts?.count ?? 0)")
+                   
+                    drafts?.forEach { draft in
+                        
+                        if let previewUrl = draft.videos.first?.previewUrl {
+                            if #available(iOS 16.0, *) {
+                                        draftPreviewImage.append(previewUrl.path(percentEncoded: false))
+                                    } else {
+                                        draftPreviewImage.append(previewUrl.path)
+                                    }
+                        }
+                
+                    }
+                    print("data \(draftPreviewImage)")
+                    self.flutterResult?(draftPreviewImage)
+                }
+            } else {
+                if self.restoreLastVideoEditingSession == false {
+                    self.videoEditorSDK?.clearSessionData()
+                }
+                self.videoEditorSDK = nil
+                print("❌ Use of SDK is restricted: the license is revoked or expired")
+                flutterResult(FlutterError(code: VeSdkFlutterPlugin.errLicenseRevoked, message: VeSdkFlutterPlugin.errMessageLicenseRevoked, details: nil))
+            }
+        })
     }
     
     func checkLicenseAndStartVideoEditor(with config: VideoEditorLaunchConfig, flutterResult: @escaping FlutterResult) {

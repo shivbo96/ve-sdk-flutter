@@ -8,8 +8,9 @@ import 'package:ve_sdk_flutter/export_result.dart';
 import 'package:ve_sdk_flutter/features_config.dart';
 import 'package:ve_sdk_flutter/ve_sdk_flutter.dart';
 
-const _licenseToken =
-    '';
+import 'draft_list.dart';
+
+const licenseToken = '';
 
 void main() {
   runApp(const MyApp());
@@ -47,8 +48,10 @@ class _HomePageState extends State<HomePage> {
   Future<void> _startVideoEditorInCameraMode() async {
     // Specify your Config params in the builder below
 
-    final FeaturesConfigBuilder configBuilder =
-        FeaturesConfigBuilder().setDraftConfig(DraftConfig.fromOption(DraftOption.disabled)).setEditorConfig(const EditorConfig(enableVideoCover: false,saveButtonText: "Post",enableVideoAspectFill: false));
+    final FeaturesConfigBuilder configBuilder = FeaturesConfigBuilder()
+        .setDraftConfig(DraftConfig.fromOption(DraftOption.auto))
+        .setEditorConfig(
+            const EditorConfig(enableVideoCover: false, saveButtonText: "Post", enableVideoAspectFill: false));
 
     final DurationConfig durationConfig = Platform.isAndroid
         ? const DurationConfig(videoDurations: [60000, 30000, 15000], maximumVideoDuration: 60000)
@@ -59,7 +62,7 @@ class _HomePageState extends State<HomePage> {
     final FeaturesConfig config = configBuilder.build();
 
     try {
-      dynamic exportResult = await _veSdkFlutterPlugin.openCameraScreen(_licenseToken, config);
+      dynamic exportResult = await _veSdkFlutterPlugin.openCameraScreen(licenseToken, config);
       _handleExportResult(exportResult);
     } on PlatformException catch (e) {
       _handlePlatformException(e);
@@ -83,7 +86,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     try {
-      dynamic exportResult = await _veSdkFlutterPlugin.openPipScreen(_licenseToken, config, sourceVideoFile);
+      dynamic exportResult = await _veSdkFlutterPlugin.openPipScreen(licenseToken, config, sourceVideoFile);
       _handleExportResult(exportResult);
     } on PlatformException catch (e) {
       _handlePlatformException(e);
@@ -108,7 +111,7 @@ class _HomePageState extends State<HomePage> {
     final sources = videoFiles.map((f) => f.path).toList();
 
     try {
-      dynamic exportResult = await _veSdkFlutterPlugin.openTrimmerScreen(_licenseToken, config, sources);
+      dynamic exportResult = await _veSdkFlutterPlugin.openTrimmerScreen(licenseToken, config, sources);
       _handleExportResult(exportResult);
     } on PlatformException catch (e) {
       _handlePlatformException(e);
@@ -135,6 +138,25 @@ class _HomePageState extends State<HomePage> {
 
     // Meta file where you can find short data used in exported video
     debugPrint('Exported meta file = ${result.metaFilePath}');
+  }
+
+  void _handleAllDraftListResult(List<dynamic>? result) {
+    if (result == null) {
+      debugPrint('No Draft List');
+      return;
+    }
+
+    for (var element in result) {
+      debugPrint('${result.indexOf(element) + 1}. Draft is  => ${element.toString()}');
+    }
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DraftList(
+            draftList: result,
+          ),
+        ));
   }
 
   void _handlePlatformException(PlatformException exception) {
@@ -222,6 +244,30 @@ class _HomePageState extends State<HomePage> {
               onPressed: () => _startVideoEditorInTrimmerMode(),
               child: const Text(
                 'Open Video Editor - Trimmer screen',
+                style: TextStyle(
+                  fontSize: 14.0,
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            MaterialButton(
+              color: Colors.blue,
+              textColor: Colors.white,
+              disabledColor: Colors.grey,
+              disabledTextColor: Colors.black,
+              padding: const EdgeInsets.all(12.0),
+              splashColor: Colors.blueAccent,
+              minWidth: 240,
+              onPressed: () async {
+                try {
+                  final List<dynamic>? exportResult = await _veSdkFlutterPlugin.getAllDraftList(licenseToken);
+                  _handleAllDraftListResult(exportResult);
+                } on PlatformException catch (e) {
+                  _handlePlatformException(e);
+                }
+              },
+              child: const Text(
+                'Get all draft List',
                 style: TextStyle(
                   fontSize: 14.0,
                 ),
