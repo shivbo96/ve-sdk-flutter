@@ -10,8 +10,7 @@ import 'package:ve_sdk_flutter/ve_sdk_flutter.dart';
 
 import 'draft_list.dart';
 
-const licenseToken =
-    'Qk5CIN+7a/vZLTpKcGY94c/BaL7StVfhFsUNbPvJ3g/64rZhPg32vJF/buyNmDWrxbuhBAUOpQxM13lPvQB1vUHxikoVNrL5olc7ocGKKm8uiOe1TPuXfMeX0IH3CEe33zxX8UX+Xu63pLrLiLoXSoxGjwEVNCXfui33JhMR0XQLQ/EVgVe408BSaSsJIRe6nmbxZjmp7gY2qzfZO17fNR92gp7LecQpj/Y9QAjFHcLrr0RkelTIPRgw+gKIWbRjlYP55QoROHiKJZtzjmlTI/51BSWMBjVE5UWwGmHVRgd3NrDNuiqKdqBL+rGg0OC1EgzLJRlEZtQbTxyzug17hLlOpIrTPoshfB2UEom67QDeUDoznGbtFs1OcOZUBl8XE4Z7raKLJj5LK80mpydONPZ/NthY84JOvpRTrr7at62U8j166edtSjr9y07cwEJCUOU9ahfKYhzWBwdmaNxzmMHqc2CF8OW7OcfL20O/OcFU4cJUZX3YH11oMUYJXPiiOeqQDtdos1ANsa72LPhus0bmEZ6WLXDnQTh4yi7a6Hnw82JtjrEjnXtPJPXlwqO520aESisXjJlsnnONfY3hBJQ9SUhWXp2gqaUUnIphmRJvm1GCcOxgiYDm9+x7pDro9OU=';
+const licenseToken = '';
 
 void main() {
   runApp(const MyApp());
@@ -269,46 +268,6 @@ class _HomePageState extends State<HomePage> {
               },
               child: const Text(
                 'Get all draft List',
-                style: TextStyle(
-                  fontSize: 14.0,
-                ),
-              ),
-            ),
-            MaterialButton(
-              color: Colors.blue,
-              textColor: Colors.white,
-              disabledColor: Colors.grey,
-              disabledTextColor: Colors.black,
-              padding: const EdgeInsets.all(12.0),
-              splashColor: Colors.blueAccent,
-              minWidth: 240,
-              onPressed: () async {
-                try {
-                  final FeaturesConfigBuilder configBuilder = FeaturesConfigBuilder()
-                      .setDraftConfig(DraftConfig.fromOption(DraftOption.auto))
-                      .setEditorConfig(const EditorConfig(enableVideoCover: false, enableVideoAspectFill: false));
-
-                  final DurationConfig durationConfig = Platform.isAndroid
-                      ? const DurationConfig(videoDurations: [60000, 30000, 15000], maximumVideoDuration: 60000)
-                      : const DurationConfig(videoDurations: [60, 30, 15], maximumVideoDuration: 60);
-
-                  configBuilder.setDurationConfig(durationConfig);
-
-
-                  final FeaturesConfig config = configBuilder.build();
-                  final exportResult = await _veSdkFlutterPlugin.importExternalDraft(
-                      licenseToken,
-                      filePath,
-                      config);
-
-                  print('exportResult=>> $exportResult');
-                  // _handleAllDraftListResult(exportResult);
-                } on PlatformException catch (e) {
-                  _handlePlatformException(e);
-                }
-              },
-              child: const Text(
-                'test import ',
                 style: TextStyle(
                   fontSize: 14.0,
                 ),
