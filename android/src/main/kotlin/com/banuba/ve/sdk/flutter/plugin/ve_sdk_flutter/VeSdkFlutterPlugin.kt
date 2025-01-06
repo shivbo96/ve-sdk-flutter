@@ -156,7 +156,7 @@ class VeSdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Acti
                         return@initialize
                     }
 
-                    activity.startActivityForResult(intent, VIDEO_EDITOR_REQUEST_CODE)
+                    activity.startActivityForResult(intent as Intent, VIDEO_EDITOR_REQUEST_CODE)
                 }
             }
 

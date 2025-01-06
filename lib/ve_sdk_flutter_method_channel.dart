@@ -19,6 +19,8 @@ class MethodChannelVeSdkFlutter extends VeSdkFlutterPlatform {
   static const String _getAllDraft = 'getAllDraft';
   static const String _removeDraft = 'removeDraft';
   static const String _screenEditor = 'editor';
+  static const String _exportExternalDraft = "exportExternalDraft";
+  static const String _importExternalDraft = "importExternalDraft";
 
   // Input params
   static const String _inputParamToken = 'token';
@@ -26,6 +28,7 @@ class MethodChannelVeSdkFlutter extends VeSdkFlutterPlatform {
   static const String _inputParamScreen = 'screen';
   static const String _inputParamVideoSources = 'videoSources';
   static const String _inputParamDraftIndex = 'draftIndex';
+  static const String _inputParamExternalDraftUrl = 'externalDraftUrl';
 
   // Exported params
   static const String _exportedVideoSources = 'exportedVideoSources';
@@ -61,6 +64,14 @@ class MethodChannelVeSdkFlutter extends VeSdkFlutterPlatform {
   Future<ExportResult?> openEditorFromDraft(String token, int draftIndex, FeaturesConfig featuresConfig) =>
       _open(token, featuresConfig, _screenEditor, [], draftIndex: draftIndex);
 
+  @override
+  Future<String?> exportExternalDraft(String token, int draftIndex) =>
+      _getExportedDraft(token, _exportExternalDraft, draftIndex);
+
+  @override
+  Future<ExportResult?> importExternalDraft(String token, String importedUrl, FeaturesConfig featuresConfig) =>
+      _open(token, featuresConfig, _importExternalDraft, [], externalDraftUrl: importedUrl);
+
   Future<List<dynamic>?> _getAllDraftList(String token, String screen) async {
     final inputParams = {
       _inputParamToken: token,
@@ -80,15 +91,27 @@ class MethodChannelVeSdkFlutter extends VeSdkFlutterPlatform {
     return exportedData;
   }
 
+  Future<String?> _getExportedDraft(String token, String screen, int draftIndex) async {
+    final inputParams = {
+      _inputParamToken: token,
+      _inputParamScreen: screen,
+      _inputParamDraftIndex: draftIndex,
+    };
+    dynamic exportedData = await methodChannel.invokeMethod(_methodStart, inputParams);
+    print('exportedData=> $exportedData');
+    return exportedData;
+  }
+
   Future<ExportResult?> _open(
       String token, FeaturesConfig featuresConfig, String screen, List<String> sourceVideoPathList,
-      {int draftIndex = 0}) async {
+      {int draftIndex = 0, String externalDraftUrl = ''}) async {
     final inputParams = {
       _inputParamToken: token,
       _inputParamFeaturesConfig: featuresConfig.serialize(),
       _inputParamScreen: screen,
       _inputParamVideoSources: sourceVideoPathList,
-      _inputParamDraftIndex: draftIndex
+      _inputParamDraftIndex: draftIndex,
+      _inputParamExternalDraftUrl:externalDraftUrl
     };
 
     debugPrint('Start video editor with params = $inputParams');

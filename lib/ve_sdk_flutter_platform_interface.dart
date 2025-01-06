@@ -39,14 +39,14 @@ abstract class VeSdkFlutterPlatform extends PlatformInterface {
   }
 
   Future<List<dynamic>?> getAllDraftList(String token) {
-    throw UnimplementedError('openTrimmerScreen() has not been implemented.');
+    throw UnimplementedError('getAllDraftList() has not been implemented.');
   }
 
   Future<bool?> removeDraftFromList(String token, int draftIndex) {
-    throw UnimplementedError('openTrimmerScreen() has not been implemented.');
+    throw UnimplementedError('removeDraftFromList() has not been implemented.');
   }
 
   Future<ExportResult?> openEditorFromDraft(String token, int draftIndex,FeaturesConfig featuresConfig) {
-    throw UnimplementedError('openTrimmerScreen() has not been implemented.');
+    throw UnimplementedError('openEditorFromDraft() has not been implemented.');
   }
 }

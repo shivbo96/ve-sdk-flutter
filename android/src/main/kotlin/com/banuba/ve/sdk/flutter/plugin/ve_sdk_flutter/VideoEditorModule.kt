@@ -57,10 +57,10 @@ class VideoEditorModule {
                 VeUiSdkKoinModule().module,
                 VeFlowKoinModule().module,
                 GalleryKoinModule().module,
-
                 // Sample integration module
                 SampleIntegrationVeKoinModule(featuresConfig).module,
-            )
+
+                )
         }
     }
 }
@@ -124,6 +124,7 @@ private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig) {
                             contentProvider = get()
                         )
                     }
+
                     else -> {
                         AutoCutSoundstripeTrackLoader(
                             soundstripeApi = get()
@@ -147,7 +148,7 @@ private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig) {
         }
 
         single<AspectsProvider> {
-            object : AspectsProvider{
+            object : AspectsProvider {
                 override var availableAspects: List<AspectSettings> = listOf()
                 override fun provide(): AspectsProvider.AspectsData {
                     return AspectsProvider.AspectsData(
