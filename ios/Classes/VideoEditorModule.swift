@@ -278,25 +278,45 @@ class VideoEditorModule: VideoEditor {
             if isValid {
                 print("✅ The license is active")
                 DispatchQueue.main.async {
-                    let drafts = self.videoEditorSDK?.draftsService.getDrafts() // Get drafts list
-            
-                    var draftPreviewImage: [String] = []
-                    print("drafts length \(drafts?.count ?? 0)")
-                   
-                    drafts?.forEach { draft in
-                        
-                        if let previewUrl = draft.videos.first?.previewUrl {
-                            if #available(iOS 16.0, *) {
-                                        draftPreviewImage.append(previewUrl.path(percentEncoded: false))
-                                    } else {
-                                        draftPreviewImage.append(previewUrl.path)
-                                    }
-                        }
-                
+                    guard let drafts = self.videoEditorSDK?.draftsService.getDrafts() else {
+                        print("No drafts available")
+                        self.flutterResult?([])
+                        return
                     }
-                    print("data \(draftPreviewImage)")
-                    self.flutterResult?(draftPreviewImage)
+
+                    let dispatchGroup = DispatchGroup() // Create a DispatchGroup
+                    var draftPreviewImage: [String] = []
+
+                    print("drafts length \(drafts.count)")
+
+                    drafts.forEach { draft in
+                        dispatchGroup.enter() // Enter the group before starting async work
+
+                        self.videoEditorSDK?.draftsService.getPreviewForVideoSequence(
+                            draft,
+                            thumbnailHeight: 200,
+                            completion: { preview in
+                                defer { dispatchGroup.leave() } // Leave the group after async work finishes
+                                
+                                if let cgImage = preview?.cgImage {
+                                    if let filePath = self.saveCGImageToFile(cgImage) {
+                                        print("Image file path: \(filePath)")
+                                        draftPreviewImage.append(filePath)
+                                    } else {
+                                        print("Failed to save image.")
+                                    }
+                                }
+                            }
+                        )
+                    }
+
+                    // Wait for all async tasks to complete
+                    dispatchGroup.notify(queue: .main) {
+                        print("All previews processed: \(draftPreviewImage)")
+                        self.flutterResult?(draftPreviewImage) // Return the final result
+                    }
                 }
+
             } else {
                 if self.restoreLastVideoEditingSession == false {
                     self.videoEditorSDK?.clearSessionData()
@@ -306,6 +326,35 @@ class VideoEditorModule: VideoEditor {
                 flutterResult(FlutterError(code: VeSdkFlutterPlugin.errLicenseRevoked, message: VeSdkFlutterPlugin.errMessageLicenseRevoked, details: nil))
             }
         })
+    }
+    
+    
+    func saveCGImageToFile(_ cgImage: CGImage) -> String? {
+        // Generate a random file name using UUID
+        let fileName = UUID().uuidString + ".png"
+        
+        // Create a URL for the temporary directory
+        let tempDirectory = FileManager.default.temporaryDirectory
+        let fileURL = tempDirectory.appendingPathComponent(fileName)
+
+        // Create a UIImage from the CGImage
+        let uiImage = UIImage(cgImage: cgImage)
+        
+        // Convert the UIImage to PNG data
+        guard let pngData = uiImage.pngData() else {
+            print("Failed to convert CGImage to PNG data")
+            return nil
+        }
+        
+        do {
+            // Write the PNG data to the file
+            try pngData.write(to: fileURL)
+            print("Image saved to: \(fileURL.path)")
+            return fileURL.path
+        } catch {
+            print("Failed to save image to file: \(error)")
+            return nil
+        }
     }
     
     func checkLicenseAndStartVideoEditor(with config: VideoEditorLaunchConfig, flutterResult: @escaping FlutterResult) {
