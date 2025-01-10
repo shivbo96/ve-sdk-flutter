@@ -42,11 +42,11 @@ abstract class VeSdkFlutterPlatform extends PlatformInterface {
     throw UnimplementedError('getAllDraftList() has not been implemented.');
   }
 
-  Future<bool?> removeDraftFromList(String token, String draftPath) {
+  Future<bool?> removeDraftFromList(String token, String draftSequenceId) {
     throw UnimplementedError('removeDraftFromList() has not been implemented.');
   }
 
-  Future<ExportResult?> openEditorFromDraft(String token, String draftPath,FeaturesConfig featuresConfig) {
+  Future<ExportResult?> openEditorFromDraft(String token, String draftSequenceId,FeaturesConfig featuresConfig) {
     throw UnimplementedError('openEditorFromDraft() has not been implemented.');
   }
 }

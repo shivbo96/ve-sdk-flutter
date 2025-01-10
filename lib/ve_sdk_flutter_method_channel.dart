@@ -28,7 +28,7 @@ class MethodChannelVeSdkFlutter extends VeSdkFlutterPlatform {
   static const String _inputParamScreen = 'screen';
   static const String _inputParamVideoSources = 'videoSources';
   static const String _inputParamDraftIndex = 'draftIndex';
-  static const String _inputParamDraftPath = 'draftPath';
+  static const String _inputParamDraftSequenceId = 'draftSequenceId';
   static const String _inputParamExternalDraftUrl = 'externalDraftUrl';
 
   // Exported params
@@ -59,12 +59,12 @@ class MethodChannelVeSdkFlutter extends VeSdkFlutterPlatform {
   Future<List<dynamic>?> getAllDraftList(String token) => _getAllDraftList(token, _getAllDraft);
 
   @override
-  Future<bool?> removeDraftFromList(String token, String draftPath) =>
-      _removeDraftFromList(token, _removeDraft, draftPath);
+  Future<bool?> removeDraftFromList(String token, String draftSequenceId) =>
+      _removeDraftFromList(token, _removeDraft, draftSequenceId);
 
   @override
-  Future<ExportResult?> openEditorFromDraft(String token, String draftPath, FeaturesConfig featuresConfig) =>
-      _open(token, featuresConfig, _screenEditor, [], draftPath: draftPath);
+  Future<ExportResult?> openEditorFromDraft(String token, String draftSequenceId, FeaturesConfig featuresConfig) =>
+      _open(token, featuresConfig, _screenEditor, [], draftSequenceId: draftSequenceId);
 
   Future<List<dynamic>?> _getAllDraftList(String token, String screen) async {
     final inputParams = {
@@ -75,11 +75,11 @@ class MethodChannelVeSdkFlutter extends VeSdkFlutterPlatform {
     return exportedData;
   }
 
-  Future<bool?> _removeDraftFromList(String token, String screen, String draftPath) async {
+  Future<bool?> _removeDraftFromList(String token, String screen, String draftSequenceId) async {
     final inputParams = {
       _inputParamToken: token,
       _inputParamScreen: screen,
-      _inputParamDraftPath: draftPath,
+      _inputParamDraftSequenceId: draftSequenceId,
     };
     dynamic exportedData = await methodChannel.invokeMethod(_methodStart, inputParams);
     return exportedData;
@@ -87,14 +87,14 @@ class MethodChannelVeSdkFlutter extends VeSdkFlutterPlatform {
 
   Future<ExportResult?> _open(
       String token, FeaturesConfig featuresConfig, String screen, List<String> sourceVideoPathList,
-      {int draftIndex = 0, String externalDraftUrl = '', String draftPath = ''}) async {
+      {int draftIndex = 0, String externalDraftUrl = '', String draftSequenceId = ''}) async {
     final inputParams = {
       _inputParamToken: token,
       _inputParamFeaturesConfig: featuresConfig.serialize(),
       _inputParamScreen: screen,
       _inputParamVideoSources: sourceVideoPathList,
       _inputParamDraftIndex: draftIndex,
-      _inputParamDraftPath: draftPath,
+      _inputParamDraftSequenceId: draftSequenceId,
       _inputParamExternalDraftUrl: externalDraftUrl
     };
 

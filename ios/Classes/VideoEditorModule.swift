@@ -23,9 +23,9 @@ protocol VideoEditor {
     
     func getAllDraftsList(flutterResult: @escaping FlutterResult)
     
-    func removeDraftFromList(draftpath:String,flutterResult: @escaping FlutterResult)
+    func removeDraftFromList(draftSequenceId:String,flutterResult: @escaping FlutterResult)
     
-    func openEditor(draftpath:String,fromViewController controller: FlutterViewController, flutterResult: @escaping FlutterResult)
+    func openEditor(draftSequenceId:String,fromViewController controller: FlutterViewController, flutterResult: @escaping FlutterResult)
 
 }
 
@@ -119,16 +119,16 @@ class VideoEditorModule: VideoEditor {
     }
     
     func openEditor(
-        draftpath:String,
+        draftSequenceId:String,
         fromViewController controller: FlutterViewController,
         flutterResult: @escaping FlutterResult
     ) {
         self.flutterResult = flutterResult
-        checkLicenseAndOpenEditor(draftpath: draftpath,fromViewController: controller,flutterResult: flutterResult)
+        checkLicenseAndOpenEditor(draftSequenceId: draftSequenceId,fromViewController: controller,flutterResult: flutterResult)
     }
     
     
-    func checkLicenseAndOpenEditor( draftpath:String,fromViewController controller: FlutterViewController,flutterResult: @escaping FlutterResult) {
+    func checkLicenseAndOpenEditor( draftSequenceId:String,fromViewController controller: FlutterViewController,flutterResult: @escaping FlutterResult) {
         if videoEditorSDK == nil {
             flutterResult(FlutterError(code: VeSdkFlutterPlugin.errSdkNotInitialized, message: VeSdkFlutterPlugin.errMessageSdkNotInitialized, details: nil))
             return
@@ -151,8 +151,8 @@ class VideoEditorModule: VideoEditor {
                     print("drafts length \(drafts.count)")
 
                     // Find the draft that matches the sequenceId
-                    guard let draftData = drafts.first(where: { $0.sequenceId == draftpath }) else {
-                        print("No draft found with the given sequenceId: \(draftpath)")
+                    guard let draftData = drafts.first(where: { $0.sequenceId == draftSequenceId }) else {
+                        print("No draft found with the given sequenceId: \(draftSequenceId)")
                         self.flutterResult?(nil)
                         return
                     }
@@ -201,11 +201,11 @@ class VideoEditorModule: VideoEditor {
     
     
     func removeDraftFromList(
-        draftpath:String,
+        draftSequenceId:String,
         flutterResult: @escaping FlutterResult
     ) {
         self.flutterResult = flutterResult
-        checkLicenseAndRemoveDraftFromList(draftpath: draftpath, flutterResult: flutterResult)
+        checkLicenseAndRemoveDraftFromList(draftSequenceId: draftSequenceId, flutterResult: flutterResult)
     }
     
     func openVideoEditorPIP(
@@ -245,7 +245,7 @@ class VideoEditorModule: VideoEditor {
     }
     
     
-    func checkLicenseAndRemoveDraftFromList(draftpath:String, flutterResult: @escaping FlutterResult) {
+    func checkLicenseAndRemoveDraftFromList(draftSequenceId:String, flutterResult: @escaping FlutterResult) {
         if videoEditorSDK == nil {
             flutterResult(FlutterError(code: VeSdkFlutterPlugin.errSdkNotInitialized, message: VeSdkFlutterPlugin.errMessageSdkNotInitialized, details: nil))
             return
@@ -266,8 +266,8 @@ class VideoEditorModule: VideoEditor {
                     }
 
                     // Find the draft that matches the sequenceId
-                    guard let draftData = drafts.first(where: { $0.sequenceId == draftpath }) else {
-                        print("No draft found with the given sequenceId: \(draftpath)")
+                    guard let draftData = drafts.first(where: { $0.sequenceId == draftSequenceId }) else {
+                        print("No draft found with the given sequenceId: \(draftSequenceId)")
                         self.flutterResult?(nil)
                         return
                     }

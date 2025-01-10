@@ -70,12 +70,12 @@ public class VeSdkFlutterPlugin: NSObject, FlutterPlugin {
                 videoEditor.getAllDraftsList(flutterResult: result)
             
             case VeSdkFlutterPlugin.removeDraft:
-                let draftpath = args[VeSdkFlutterPlugin.inputParamDraftPath] as? String ?? ""
-                videoEditor.removeDraftFromList(draftpath: draftpath, flutterResult: result)
+                let draftSequenceId = args[VeSdkFlutterPlugin.inputParamDraftSequenceId] as? String ?? ""
+                videoEditor.removeDraftFromList(draftSequenceId: draftSequenceId, flutterResult: result)
             
             case VeSdkFlutterPlugin.editor:
-                let draftpath = args[VeSdkFlutterPlugin.inputParamDraftPath] as? String ?? ""
-                videoEditor.openEditor(draftpath: draftpath,fromViewController: controller, flutterResult: result)
+                let draftSequenceId = args[VeSdkFlutterPlugin.inputParamDraftSequenceId] as? String ?? ""
+                videoEditor.openEditor(draftSequenceId: draftSequenceId,fromViewController: controller, flutterResult: result)
             
             default:
                 debugPrint("Unknown screen value = \(screen)")

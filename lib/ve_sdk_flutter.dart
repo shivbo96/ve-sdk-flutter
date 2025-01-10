@@ -16,9 +16,9 @@ class VeSdkFlutter {
 
   Future<List<dynamic>?> getAllDraftList(String token) => VeSdkFlutterPlatform.instance.getAllDraftList(token);
 
-  Future<bool?> removeDraftFromList(String token, {required String draftPath}) =>
-      VeSdkFlutterPlatform.instance.removeDraftFromList(token, draftPath);
+  Future<bool?> removeDraftFromList(String token, {required String draftSequenceId}) =>
+      VeSdkFlutterPlatform.instance.removeDraftFromList(token, draftSequenceId);
 
-  Future<ExportResult?> openEditorFromDraft(String token, String draftPath, FeaturesConfig featuresConfig) =>
-      VeSdkFlutterPlatform.instance.openEditorFromDraft(token, draftPath, featuresConfig);
+  Future<ExportResult?> openEditorFromDraft(String token, String draftSequenceId, FeaturesConfig featuresConfig) =>
+      VeSdkFlutterPlatform.instance.openEditorFromDraft(token, draftSequenceId, featuresConfig);
 }

@@ -23,7 +23,7 @@ extension VeSdkFlutterPlugin {
     static let inputParamScreen = "screen"
     static let inputParamVideoSources = "videoSources"
     static let inputParamDraftIndex = "draftIndex"
-    static let inputParamDraftPath = "draftPath"
+    static let inputParamDraftSequenceId = "draftSequenceId"
     
     static let screenCamera = "camera"
     static let screenPip = "pip"

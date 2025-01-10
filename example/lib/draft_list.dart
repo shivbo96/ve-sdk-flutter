@@ -39,8 +39,7 @@ class _DraftListState extends State<DraftList> {
               onTap: () async {
                 final FeaturesConfigBuilder configBuilder = FeaturesConfigBuilder()
                     .setDraftConfig(DraftConfig.fromOption(DraftOption.auto))
-                    .setEditorConfig(const EditorConfig(
-                        enableVideoCover: false, enableVideoAspectFill: false));
+                    .setEditorConfig(const EditorConfig(enableVideoCover: false, enableVideoAspectFill: false));
 
                 final DurationConfig durationConfig = Platform.isAndroid
                     ? const DurationConfig(videoDurations: [60000, 30000, 15000], maximumVideoDuration: 60000)
@@ -74,7 +73,7 @@ class _DraftListState extends State<DraftList> {
                       icon: const Icon(Icons.delete),
                       onPressed: () async {
                         final bool? isRemovedFromList =
-                            await _veSdkFlutterPlugin.removeDraftFromList(licenseToken, draftPath: '');
+                            await _veSdkFlutterPlugin.removeDraftFromList(licenseToken, draftSequenceId: '');
 
                         if (isRemovedFromList ?? false) {
                           final List<dynamic>? exportResult = await _veSdkFlutterPlugin.getAllDraftList(licenseToken);
