@@ -28,6 +28,7 @@ class MethodChannelVeSdkFlutter extends VeSdkFlutterPlatform {
   static const String _inputParamScreen = 'screen';
   static const String _inputParamVideoSources = 'videoSources';
   static const String _inputParamDraftIndex = 'draftIndex';
+  static const String _inputParamDraftPath = 'draftPath';
   static const String _inputParamExternalDraftUrl = 'externalDraftUrl';
 
   // Exported params
@@ -35,6 +36,7 @@ class MethodChannelVeSdkFlutter extends VeSdkFlutterPlatform {
   static const String _exportedPreview = 'exportedPreview';
   static const String _exportedMeta = 'exportedMeta';
   static const String _musicFileName = 'musicFileName';
+  static const String _draftSequence = 'draftVideoSequence';
 
   /// The method channel used to interact with the native platform.
   // @visibleForTesting
@@ -57,20 +59,12 @@ class MethodChannelVeSdkFlutter extends VeSdkFlutterPlatform {
   Future<List<dynamic>?> getAllDraftList(String token) => _getAllDraftList(token, _getAllDraft);
 
   @override
-  Future<bool?> removeDraftFromList(String token, int draftIndex) =>
-      _removeDraftFromList(token, _removeDraft, draftIndex);
+  Future<bool?> removeDraftFromList(String token, String draftPath) =>
+      _removeDraftFromList(token, _removeDraft, draftPath);
 
   @override
-  Future<ExportResult?> openEditorFromDraft(String token, int draftIndex, FeaturesConfig featuresConfig) =>
-      _open(token, featuresConfig, _screenEditor, [], draftIndex: draftIndex);
-
-  @override
-  Future<String?> exportExternalDraft(String token, int draftIndex) =>
-      _getExportedDraft(token, _exportExternalDraft, draftIndex);
-
-  @override
-  Future<ExportResult?> importExternalDraft(String token, String importedUrl, FeaturesConfig featuresConfig) =>
-      _open(token, featuresConfig, _importExternalDraft, [], externalDraftUrl: importedUrl);
+  Future<ExportResult?> openEditorFromDraft(String token, String draftPath, FeaturesConfig featuresConfig) =>
+      _open(token, featuresConfig, _screenEditor, [], draftPath: draftPath);
 
   Future<List<dynamic>?> _getAllDraftList(String token, String screen) async {
     final inputParams = {
@@ -81,37 +75,27 @@ class MethodChannelVeSdkFlutter extends VeSdkFlutterPlatform {
     return exportedData;
   }
 
-  Future<bool?> _removeDraftFromList(String token, String screen, int draftIndex) async {
+  Future<bool?> _removeDraftFromList(String token, String screen, String draftPath) async {
     final inputParams = {
       _inputParamToken: token,
       _inputParamScreen: screen,
-      _inputParamDraftIndex: draftIndex,
+      _inputParamDraftPath: draftPath,
     };
     dynamic exportedData = await methodChannel.invokeMethod(_methodStart, inputParams);
-    return exportedData;
-  }
-
-  Future<String?> _getExportedDraft(String token, String screen, int draftIndex) async {
-    final inputParams = {
-      _inputParamToken: token,
-      _inputParamScreen: screen,
-      _inputParamDraftIndex: draftIndex,
-    };
-    dynamic exportedData = await methodChannel.invokeMethod(_methodStart, inputParams);
-    print('exportedData=> $exportedData');
     return exportedData;
   }
 
   Future<ExportResult?> _open(
       String token, FeaturesConfig featuresConfig, String screen, List<String> sourceVideoPathList,
-      {int draftIndex = 0, String externalDraftUrl = ''}) async {
+      {int draftIndex = 0, String externalDraftUrl = '', String draftPath = ''}) async {
     final inputParams = {
       _inputParamToken: token,
       _inputParamFeaturesConfig: featuresConfig.serialize(),
       _inputParamScreen: screen,
       _inputParamVideoSources: sourceVideoPathList,
       _inputParamDraftIndex: draftIndex,
-      _inputParamExternalDraftUrl:externalDraftUrl
+      _inputParamDraftPath: draftPath,
+      _inputParamExternalDraftUrl: externalDraftUrl
     };
 
     debugPrint('Start video editor with params = $inputParams');
@@ -127,10 +111,12 @@ class MethodChannelVeSdkFlutter extends VeSdkFlutterPlatform {
       String? metaFilePath = exportedData[_exportedMeta];
       String? previewFilePath = exportedData[_exportedPreview];
       String? musicFileName = exportedData[_musicFileName];
+      String? draftSequence = exportedData[_draftSequence];
       return ExportResult(
           videoSources: videoSources,
           previewFilePath: previewFilePath,
           musicFileName: musicFileName,
+          draftSequence: draftSequence,
           metaFilePath: metaFilePath);
     }
   }

@@ -50,7 +50,7 @@ class _DraftListState extends State<DraftList> {
 
                 final FeaturesConfig config = configBuilder.build();
                 final ExportResult? exportResult =
-                    await _veSdkFlutterPlugin.openEditorFromDraft(licenseToken, index, config);
+                    await _veSdkFlutterPlugin.openEditorFromDraft(licenseToken, '', config);
                 _handleExportResult(exportResult);
               },
               behavior: HitTestBehavior.opaque,
@@ -74,7 +74,7 @@ class _DraftListState extends State<DraftList> {
                       icon: const Icon(Icons.delete),
                       onPressed: () async {
                         final bool? isRemovedFromList =
-                            await _veSdkFlutterPlugin.removeDraftFromList(licenseToken, draftIndex: index);
+                            await _veSdkFlutterPlugin.removeDraftFromList(licenseToken, draftPath: '');
 
                         if (isRemovedFromList ?? false) {
                           final List<dynamic>? exportResult = await _veSdkFlutterPlugin.getAllDraftList(licenseToken);

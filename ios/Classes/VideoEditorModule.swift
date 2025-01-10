@@ -23,9 +23,9 @@ protocol VideoEditor {
     
     func getAllDraftsList(flutterResult: @escaping FlutterResult)
     
-    func removeDraftFromList(draftIndex:Int,flutterResult: @escaping FlutterResult)
+    func removeDraftFromList(draftpath:String,flutterResult: @escaping FlutterResult)
     
-    func openEditor(draftIndex:Int,fromViewController controller: FlutterViewController, flutterResult: @escaping FlutterResult)
+    func openEditor(draftpath:String,fromViewController controller: FlutterViewController, flutterResult: @escaping FlutterResult)
 
 }
 
@@ -50,7 +50,12 @@ class VideoEditorModule: VideoEditor {
         config.videoDurationConfiguration.videoDurations = featuresConfig.durationConfig.videoDurations
         config.featureConfiguration.isVideoCoverSelectionEnabled = featuresConfig.editorConfig.enableVideoCover
         config.featureConfiguration.isAspectsEnabled = false
+        config.featureConfiguration.draftsConfig = .enabledSaveToDraftsByDefault
         
+        config.recorderConfiguration.previewScalingMode = .aspectFit
+
+
+        config.draftsConfiguration.backButton.menuActions = [PopoverAlertViewController.ActionType.discardChanges(OverlayPopoverActionConfiguration(leftImage: nil, rightImage: nil, title: TextConfiguration(font: UIFont.systemFont(ofSize: 12.0), color: UIColor.black), titleImageInset: 0))]
     
         config.editorConfiguration.saveButton = BanubaButtonConfiguration(
                   title: TextButtonConfiguration(
@@ -114,16 +119,16 @@ class VideoEditorModule: VideoEditor {
     }
     
     func openEditor(
-        draftIndex:Int,
+        draftpath:String,
         fromViewController controller: FlutterViewController,
         flutterResult: @escaping FlutterResult
     ) {
         self.flutterResult = flutterResult
-        checkLicenseAndOpenEditor(draftIndex: draftIndex,fromViewController: controller,flutterResult: flutterResult)
+        checkLicenseAndOpenEditor(draftpath: draftpath,fromViewController: controller,flutterResult: flutterResult)
     }
     
     
-    func checkLicenseAndOpenEditor( draftIndex:Int,fromViewController controller: FlutterViewController,flutterResult: @escaping FlutterResult) {
+    func checkLicenseAndOpenEditor( draftpath:String,fromViewController controller: FlutterViewController,flutterResult: @escaping FlutterResult) {
         if videoEditorSDK == nil {
             flutterResult(FlutterError(code: VeSdkFlutterPlugin.errSdkNotInitialized, message: VeSdkFlutterPlugin.errMessageSdkNotInitialized, details: nil))
             return
@@ -132,31 +137,39 @@ class VideoEditorModule: VideoEditor {
         // Checking the license might take around 1 sec in the worst case.
         // Please optimize use if this method in your application for the best user experience
         videoEditorSDK?.getLicenseState(completion: { [weak self] isValid in
-            guard let self else { return }
+            guard let self = self else { return }
+            
             if isValid {
                 print("✅ The license is active")
                 DispatchQueue.main.async {
-                    
-                    let drafts = self.videoEditorSDK?.draftsService.getDrafts() // Get drafts list
-                    guard let draft = drafts?[draftIndex] else {return}
-                    
-                    
-                    // Open Video Editor with preselected draft
+                    guard let drafts = self.videoEditorSDK?.draftsService.getDrafts() else {
+                        print("No drafts available")
+                        self.flutterResult?([])
+                        return
+                    }
+
+                    print("drafts length \(drafts.count)")
+
+                    // Find the draft that matches the sequenceId
+                    guard let draftData = drafts.first(where: { $0.sequenceId == draftpath }) else {
+                        print("No draft found with the given sequenceId: \(draftpath)")
+                        self.flutterResult?(nil)
+                        return
+                    }
+
+                    // Open Video Editor with the preselected draft
                     let draftedConfig = VideoEditorLaunchConfig.DraftedLaunchConfig(
-                      // Choosen draft from list of drafts
-                      externalDraft: draft,
-                      // Any case from DraftsFeatureConfig entity
-                      draftsConfig: .enabled
+                        externalDraft: draftData,
+                        draftsConfig: .enabled
                     )
-                    
-                    
+
                     let config = VideoEditorLaunchConfig(
-                      entryPoint: .editor,
-                      hostController: controller,
-                      draftedLaunchConfig: draftedConfig,
-                      animated: true
+                        entryPoint: .editor,
+                        hostController: controller,
+                        draftedLaunchConfig: draftedConfig,
+                        animated: true
                     )
-                    
+
                     self.videoEditorSDK?.presentVideoEditor(
                         withLaunchConfiguration: config,
                         completion: nil
@@ -168,9 +181,14 @@ class VideoEditorModule: VideoEditor {
                 }
                 self.videoEditorSDK = nil
                 print("❌ Use of SDK is restricted: the license is revoked or expired")
-                flutterResult(FlutterError(code: VeSdkFlutterPlugin.errLicenseRevoked, message: VeSdkFlutterPlugin.errMessageLicenseRevoked, details: nil))
+                self.flutterResult?(FlutterError(
+                    code: VeSdkFlutterPlugin.errLicenseRevoked,
+                    message: VeSdkFlutterPlugin.errMessageLicenseRevoked,
+                    details: nil
+                ))
             }
         })
+
     }
     
     
@@ -183,11 +201,11 @@ class VideoEditorModule: VideoEditor {
     
     
     func removeDraftFromList(
-        draftIndex:Int,
+        draftpath:String,
         flutterResult: @escaping FlutterResult
     ) {
         self.flutterResult = flutterResult
-        checkLicenseAndRemoveDraftFromList(draftIndex: draftIndex, flutterResult: flutterResult)
+        checkLicenseAndRemoveDraftFromList(draftpath: draftpath, flutterResult: flutterResult)
     }
     
     func openVideoEditorPIP(
@@ -227,7 +245,7 @@ class VideoEditorModule: VideoEditor {
     }
     
     
-    func checkLicenseAndRemoveDraftFromList( draftIndex:Int,flutterResult: @escaping FlutterResult) {
+    func checkLicenseAndRemoveDraftFromList(draftpath:String, flutterResult: @escaping FlutterResult) {
         if videoEditorSDK == nil {
             flutterResult(FlutterError(code: VeSdkFlutterPlugin.errSdkNotInitialized, message: VeSdkFlutterPlugin.errMessageSdkNotInitialized, details: nil))
             return
@@ -239,18 +257,30 @@ class VideoEditorModule: VideoEditor {
             guard let self else { return }
             if isValid {
                 print("✅ The license is active")
+                
                 DispatchQueue.main.async {
-                    let drafts = self.videoEditorSDK?.draftsService.getDrafts() // Get drafts list
-                    guard let item = drafts?[draftIndex] else {return}
-    
-                    let isDeleted = self.videoEditorSDK?.draftsService.removeExternalDraft(item)
+                    guard let drafts = self.videoEditorSDK?.draftsService.getDrafts() else {
+                        print("No drafts available")
+                        self.flutterResult?([])
+                        return
+                    }
 
-                    
+                    // Find the draft that matches the sequenceId
+                    guard let draftData = drafts.first(where: { $0.sequenceId == draftpath }) else {
+                        print("No draft found with the given sequenceId: \(draftpath)")
+                        self.flutterResult?(nil)
+                        return
+                    }
+                    let isDeleted = self.videoEditorSDK?.draftsService.removeExternalDraft(draftData)
                    
-                  
-                    print("data \(isDeleted ?? false)")
+            
+                    print("isDeleted \(isDeleted ?? false)")
                     self.flutterResult?(isDeleted ?? false)
+
+                   
                 }
+                
+               
 
             } else {
                 if self.restoreLastVideoEditingSession == false {
@@ -330,13 +360,6 @@ class VideoEditorModule: VideoEditor {
     
     
     func saveCGImageToFile(_ cgImage: CGImage) -> String? {
-        // Generate a random file name using UUID
-        let fileName = UUID().uuidString + ".png"
-        
-        // Create a URL for the temporary directory
-        let tempDirectory = FileManager.default.temporaryDirectory
-        let fileURL = tempDirectory.appendingPathComponent(fileName)
-
         // Create a UIImage from the CGImage
         let uiImage = UIImage(cgImage: cgImage)
         
@@ -346,13 +369,20 @@ class VideoEditorModule: VideoEditor {
             return nil
         }
         
+        // Generate a file name using the hash of the pngData
+        let fileName = "\(pngData.hashValue).png"
+        
+        // Create a URL for the temporary directory
+        let tempDirectory = FileManager.default.temporaryDirectory
+        let fileURL = tempDirectory.appendingPathComponent(fileName)
+        
         do {
             // Write the PNG data to the file
             try pngData.write(to: fileURL)
-            print("Image saved to: \(fileURL.path)")
+            print("Image successfully saved at: \(fileURL.path)")
             return fileURL.path
         } catch {
-            print("Failed to save image to file: \(error)")
+            print("Failed to save image: \(error.localizedDescription)")
             return nil
         }
     }
@@ -390,7 +420,7 @@ class VideoEditorModule: VideoEditor {
 
 // MARK: - Export flow
 extension VideoEditorModule {
-    func exportVideo() {
+    func exportVideo(draft: BanubaVideoEditorSDK.ExternalDraft) {
         let progressView = ProgressViewController.makeViewController()
         
         progressView.cancelHandler = { [weak self] in
@@ -428,6 +458,7 @@ extension VideoEditorModule {
             videoConfigurations: exportVideoConfigurations,
             isCoverEnabled: true,
             gifSettings: nil
+        
         )
         
         videoEditorSDK?.export(
@@ -453,13 +484,13 @@ extension VideoEditorModule {
                     }
                     
                     // TODO 1. simplify method
-                    self?.completeExport(videoUrls: [firstFileURL], metaUrl: metadataUrl, previewUrl: previewURL, error: error, previewImage: coverImage?.coverImage)
+                    self?.completeExport(videoUrls: [firstFileURL], metaUrl: metadataUrl, previewUrl: previewURL, error: error, previewImage: coverImage?.coverImage,draft: draft)
                 }
             }
         }
     }
     
-    private func completeExport(videoUrls: [URL], metaUrl: URL?, previewUrl: URL, error: Error?, previewImage: UIImage?) {
+    private func completeExport(videoUrls: [URL], metaUrl: URL?, previewUrl: URL, error: Error?, previewImage: UIImage?,draft: BanubaVideoEditorSDK.ExternalDraft) {
         videoEditorSDK?.dismissVideoEditor(animated: true) {
             let success = error == nil
             if success {
@@ -474,8 +505,8 @@ extension VideoEditorModule {
                     VeSdkFlutterPlugin.argExportedVideoSources: videoUrls.compactMap { $0.path },
                     VeSdkFlutterPlugin.argExportedPreview: previewUrl.path,
                     VeSdkFlutterPlugin.argExportedMeta: metaUrl?.path,
-                    VeSdkFlutterPlugin.musicFileName: self.videoEditorSDK?.musicMetadata?.tracks.first?.title
-                ]
+                    VeSdkFlutterPlugin.draftVideoSequence: draft.sequenceId,
+                    VeSdkFlutterPlugin.musicFileName: self.videoEditorSDK?.musicMetadata?.tracks.first?.title]
                 print("data \(data)")
                 self.flutterResult?(data)
             } else {
@@ -510,6 +541,10 @@ extension VideoEditorModule {
 
 // MARK: - BanubaVideoEditorSDKDelegate
 extension VideoEditorModule: BanubaVideoEditorDelegate {
+    func videoEditorDone(_ videoEditor: BanubaVideoEditorSDK.BanubaVideoEditor) {
+        
+    }
+    
     func videoEditorDidCancel(_ videoEditor: BanubaVideoEditor) {
         videoEditor.dismissVideoEditor(animated: true) {
             // remove strong reference to video editor sdk instance
@@ -520,8 +555,8 @@ extension VideoEditorModule: BanubaVideoEditorDelegate {
         }
     }
     
-    func videoEditorDone(_ videoEditor: BanubaVideoEditor) {
-        exportVideo()
+    func videoEditor(_ videoEditor: BanubaVideoEditor, didSaveDraft draft: BanubaVideoEditorSDK.ExternalDraft) {
+        exportVideo(draft: draft)
     }
 }
 
@@ -577,16 +612,16 @@ extension VideoEditorConfig {
 
         self.editorConfiguration.isVideoAspectFillEnabled = featuresConfig.editorConfig.enableVideoAspectFill
 
-        switch featuresConfig.draftConfig.option{
-            case VideoEditorConfig.featuresConfigDraftConfigOptionAuto:
-                self.featureConfiguration.draftsConfig = .enabledSaveToDraftsByDefault
-            case VideoEditorConfig.featuresConfigDraftConfigOptionСloseOnSave:
-                self.featureConfiguration.draftsConfig = .enabledAskIfSaveNotExport
-            case VideoEditorConfig.featuresConfigDraftConfigOptionDisabled:
-                self.featureConfiguration.draftsConfig = .disabled
-            default:
-                self.featureConfiguration.draftsConfig = .enabled
-        }
+//        switch featuresConfig.draftConfig.option{
+//            case VideoEditorConfig.featuresConfigDraftConfigOptionAuto:
+//                self.featureConfiguration.draftsConfig = .enabledSaveToDraftsByDefault
+//            case VideoEditorConfig.featuresConfigDraftConfigOptionСloseOnSave:
+//                self.featureConfiguration.draftsConfig = .enabledAskIfSaveNotExport
+//            case VideoEditorConfig.featuresConfigDraftConfigOptionDisabled:
+//                self.featureConfiguration.draftsConfig = .disabled
+//            default:
+//                self.featureConfiguration.draftsConfig = .enabled
+//        }
 
         // Make customization here
         

@@ -23,6 +23,7 @@ extension VeSdkFlutterPlugin {
     static let inputParamScreen = "screen"
     static let inputParamVideoSources = "videoSources"
     static let inputParamDraftIndex = "draftIndex"
+    static let inputParamDraftPath = "draftPath"
     
     static let screenCamera = "camera"
     static let screenPip = "pip"
@@ -36,6 +37,7 @@ extension VeSdkFlutterPlugin {
     static let argExportedMeta = "exportedMeta"
     static let musicFileName = "musicFileName"
     static let draftPreviewImage = "draftPreviewImage"
+    static let draftVideoSequence = "draftVideoSequence"
 
     static let errMessageSdkNotInitialized = """
         Failed to initialize SDK!!!

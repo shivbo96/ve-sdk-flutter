@@ -5,11 +5,13 @@ class ExportResult {
   String? previewFilePath;
   String? metaFilePath;
   String? musicFileName;
+  String? draftSequence;
 
   ExportResult(
       {required this.videoSources,
       required this.previewFilePath,
       required this.metaFilePath,
+      required this.draftSequence,
       required this.musicFileName});
 
   @override
@@ -20,13 +22,14 @@ class ExportResult {
           videoSources == other.videoSources &&
           previewFilePath == other.previewFilePath &&
           musicFileName == other.musicFileName &&
+          draftSequence == other.draftSequence &&
           metaFilePath == other.metaFilePath;
 
   @override
-  int get hashCode => videoSources.hashCode ^ previewFilePath.hashCode ^ metaFilePath.hashCode;
+  int get hashCode => videoSources.hashCode ^ previewFilePath.hashCode ^ metaFilePath.hashCode ^ draftSequence.hashCode ^ musicFileName.hashCode;
 
   @override
   String toString() {
-    return 'ExportResult{videoSources: $videoSources, previewFilePath: $previewFilePath, metaFilePath: $metaFilePath, musicFileName: $musicFileName}';
+    return 'ExportResult{videoSources: $videoSources, previewFilePath: $previewFilePath, metaFilePath: $metaFilePath, musicFileName: $musicFileName, draftSequence: $draftSequence}';
   }
 }
