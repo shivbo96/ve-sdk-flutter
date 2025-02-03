@@ -114,7 +114,8 @@ private fun JSONObject.extractDraftConfig(): DraftConfig =
     try {
         this.optJSONObject(FEATURES_CONFIG_DRAFT_CONFIG)?.let { json ->
             DraftConfig(
-                option = json.optString(FEATURES_CONFIG_DRAFT_CONFIG_OPTION)
+                option = json.optString(FEATURES_CONFIG_DRAFT_CONFIG_OPTION),
+                duration = json.optLong(FEATURES_CONFIG_DRAFT_CONFIG_DURATION)
             )
         }
     } catch (e: JSONException) {

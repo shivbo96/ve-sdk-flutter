@@ -60,6 +60,7 @@ extension DraftConfigSerializer on DraftConfig {
   Map<String, dynamic> _serialize() {
     return {
       'option': option.name,
+      'duration': duration,
     };
   }
 }

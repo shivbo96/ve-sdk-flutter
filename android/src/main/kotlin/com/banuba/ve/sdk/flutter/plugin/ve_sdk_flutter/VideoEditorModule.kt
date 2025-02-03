@@ -14,6 +14,7 @@ import com.banuba.sdk.audiobrowser.feedfm.AutoCutBanubaTrackLoader
 import com.banuba.sdk.audiobrowser.soundstripe.AutoCutSoundstripeTrackLoader
 import com.banuba.sdk.audiobrowser.soundstripe.SoundstripeProvider
 import com.banuba.sdk.cameraui.data.CameraConfig
+import com.banuba.sdk.core.data.DraftsHelper
 import com.banuba.sdk.core.data.TrackData
 import com.banuba.sdk.core.data.autocut.AutoCutTrackLoader
 import com.banuba.sdk.core.domain.DraftConfig
@@ -36,8 +37,10 @@ import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import org.koin.java.KoinJavaComponent.inject
 
 class VideoEditorModule {
+
     internal fun initialize(application: Application, featuresConfig: FeaturesConfig) {
         startKoin {
             androidContext(application)

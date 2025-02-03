@@ -51,6 +51,8 @@ class VideoEditorModule: VideoEditor {
         config.featureConfiguration.isVideoCoverSelectionEnabled = featuresConfig.editorConfig.enableVideoCover
         config.featureConfiguration.isAspectsEnabled = false
         config.featureConfiguration.draftsConfig = .enabledSaveToDraftsByDefault
+        AudioBrowserConfig.shared.musicSource = .localStorageWithMyFiles
+        
         
         config.recorderConfiguration.previewScalingMode = .aspectFit
 
@@ -565,27 +567,29 @@ extension VideoEditorConfig {
     mutating func applyFeatureConfig(_ featuresConfig: FeaturesConfig) {
         
         print("\(VideoEditorConfig.featuresConfigTag): Add Features Config with params: \(featuresConfig)")
+
+//        AudioBrowserConfig.shared.musicSource = .localStorageWithMyFiles
         
-        switch featuresConfig.audioBrowser.source {
-            case VideoEditorConfig.featuresConfigAudioBrowserSourceSoundstripe:
-                AudioBrowserConfig.shared.musicSource = .soundstripe
-            case VideoEditorConfig.featuresConfigAudioBrowserSourceLocal:
-                AudioBrowserConfig.shared.musicSource = .localStorageWithMyFiles
-            case VideoEditorConfig.featuresConfigAudioBrowserSourceMubert:
-                AudioBrowserConfig.shared.musicSource = .mubert
-            default:
-                AudioBrowserConfig.shared.musicSource = .allSources
-        }
+//        switch featuresConfig.audioBrowser.source {
+//            case VideoEditorConfig.featuresConfigAudioBrowserSourceSoundstripe:
+//                AudioBrowserConfig.shared.musicSource = .soundstripe
+//            case VideoEditorConfig.featuresConfigAudioBrowserSourceLocal:
+//                AudioBrowserConfig.shared.musicSource = .localStorageWithMyFiles
+//            case VideoEditorConfig.featuresConfigAudioBrowserSourceMubert:
+//                AudioBrowserConfig.shared.musicSource = .mubert
+//            default:
+//                AudioBrowserConfig.shared.musicSource = .localStorageWithMyFiles
+//        }
         
-        if featuresConfig.audioBrowser.source == VideoEditorConfig.featuresConfigAudioBrowserSourceMubert {
-            guard let audioBrowserParams = featuresConfig.audioBrowser.params else { return }
-            guard let mubertLicence = audioBrowserParams.mubertLicence, let mubertToken = audioBrowserParams.mubertToken else { return }
-            
-            BanubaAudioBrowser.setMubertKeys(
-                license: mubertLicence,
-                token: mubertToken
-            )
-        }
+//        if featuresConfig.audioBrowser.source == VideoEditorConfig.featuresConfigAudioBrowserSourceMubert {
+//            guard let audioBrowserParams = featuresConfig.audioBrowser.params else { return }
+//            guard let mubertLicence = audioBrowserParams.mubertLicence, let mubertToken = audioBrowserParams.mubertToken else { return }
+//            
+//            BanubaAudioBrowser.setMubertKeys(
+//                license: mubertLicence,
+//                token: mubertToken
+//            )
+//        }
         
         if let aiCaptions = featuresConfig.aiCaptions {
             self.captionsConfiguration.captionsUploadUrl = aiCaptions.uploadUrl

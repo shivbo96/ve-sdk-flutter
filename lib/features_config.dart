@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-
 class FeaturesConfig {
   final AiClipping? aiClipping;
   final AiCaptions? aiCaptions;
@@ -117,10 +115,11 @@ enum DraftOption { askToSave, closeOnSave, auto, disabled }
 // @immutable
 class DraftConfig {
   final DraftOption option;
+  final int duration;
 
-  const DraftConfig._({required this.option});
+  const DraftConfig._({required this.option, this.duration = 0});
 
-  factory DraftConfig.fromOption(DraftOption option) {
-    return DraftConfig._(option: option);
+  factory DraftConfig.fromOption(DraftOption option, {int duration = 0}) {
+    return DraftConfig._(option: option, duration: duration);
   }
 }

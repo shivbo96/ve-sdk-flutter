@@ -26,6 +26,7 @@ class VeSdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Acti
         private const val VIDEO_EDITOR_REQUEST_CODE = 1000
     }
 
+
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -70,93 +71,149 @@ class VeSdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Acti
         when (methodName) {
             METHOD_START -> {
                 initialize(licenseToken, featuresConfig) { activity ->
-                    val intent = when (screen) {
-                        SCREEN_CAMERA -> {
-                            Log.d(TAG, "Start video editor from camera screen")
-                            VideoCreationActivity.startFromCamera(
-                                context = activity,
-                                // setup data that will be acceptable during export flow
-                                additionalExportData = null,
-                                // set TrackData object if you open VideoCreationActivity with preselected music track
-                                audioTrackData = null,
-                                // set PiP video configuration
-                                pictureInPictureConfig = PipConfig(
-                                    video = Uri.EMPTY,
-                                    openPipSettings = false
-                                ),
-                                extras = prepareExtras(featuresConfig)
+                    if (screen == SCREEN_REMOVE_DRAFT) {
+
+                        val draftId = call.argument<String>(INPUT_PARAM_DRAFT_VIDEO_SEQUENCE)
+                        if (draftId != null) {
+                           val  isDeleted = DraftLocalHelper.deleteSessionByCreatedDate(
+                                "${activity.filesDir.path}/sessions/sessions.json",
+                                draftId.toLong()
                             )
+
+                            this.channelResult?.success(isDeleted)
+
+                        } else {
+                            this.channelResult?.success(false)
                         }
 
-                        SCREEN_PIP -> {
-                            val videoSources =
-                                call.argument<List<String>>(INPUT_PARAM_VIDEO_SOURCES)
-                            Log.d(TAG, "Received pip video sources = $videoSources")
+                    } else {
+                        val intent = when (screen) {
+                            SCREEN_CAMERA -> {
+                                Log.d(TAG, "Start video editor from camera screen")
 
-                            if (videoSources.isNullOrEmpty()) {
-                                channelResult?.error(
-                                    ERR_INVALID_PARAMS,
-                                    ERR_MESSAGE_MISSING_PIP_VIDEO,
-                                    null
+                                VideoCreationActivity.startFromCamera(
+                                    context = activity,
+                                    // setup data that will be acceptable during export flow
+                                    additionalExportData = null,
+
+                                    // set TrackData object if you open VideoCreationActivity with preselected music track
+                                    audioTrackData = null,
+                                    // set PiP video configuration
+                                    pictureInPictureConfig = PipConfig(
+                                        video = Uri.EMPTY,
+                                        openPipSettings = false
+                                    ),
+                                    extras = prepareExtras(featuresConfig)
                                 )
-                                return@initialize
+
                             }
 
-                            val videoUri = Uri.fromFile(File(videoSources.first()))
-                            Log.d(TAG, "Start video editor in pip mode with video = $videoUri")
 
-                            VideoCreationActivity.startFromCamera(
-                                context = activity,
-                                // setup data that will be acceptable during export flow
-                                additionalExportData = null,
-                                // set TrackData object if you open VideoCreationActivity with preselected music track
-                                audioTrackData = null,
-                                // set PiP video configuration
-                                pictureInPictureConfig = PipConfig(
-                                    video = videoUri,
-                                    openPipSettings = false
-                                ),
-                                extras = prepareExtras(featuresConfig)
-                            )
-                        }
-
-                        SCREEN_TRIMMER -> {
-                            val videoSources =
-                                call.argument<List<String>>(INPUT_PARAM_VIDEO_SOURCES)
-                            Log.d(TAG, "Received trimmer video sources = $videoSources")
-
-                            if (videoSources.isNullOrEmpty()) {
-                                channelResult?.error(
-                                    ERR_INVALID_PARAMS,
-                                    ERR_MESSAGE_MISSING_TRIMMER_VIDEO_SOURCES,
-                                    null
+                            SCREEN_EDITOR -> {
+                                val draftId =
+                                    call.argument<String>(INPUT_PARAM_DRAFT_VIDEO_SEQUENCE)
+                                val draft = draftId?.let {
+                                    DraftLocalHelper.getSessionByCreatedDate(
+                                        "${activity.filesDir.path}/sessions/sessions.json",
+                                        it.toLong()
+                                    )
+                                }
+                                println("draft = $draft")
+                                VideoCreationActivity.startFromDrafts(
+                                    context = activity,
+                                    predefinedDraft = draft,
+                                    extras = prepareExtras(featuresConfig)
                                 )
-                                return@initialize
+
                             }
 
-                            VideoCreationActivity.startFromTrimmer(
-                                context = activity,
-                                // setup data that will be acceptable during export flow
-                                additionalExportData = null,
-                                // set TrackData object if you open VideoCreationActivity with preselected music track
-                                audioTrackData = null,
-                                // set Trimmer video configuration
-                                predefinedVideos = videoSources.map { Uri.fromFile(File(it)) }
-                                    .toTypedArray(),
-                                extras = prepareExtras(featuresConfig)
-                            )
+                            //if (featuresConfig.draftConfig.duration > 0) {
+                            //                                val draft = DraftLocalHelper.getSessionByCreatedDate(
+                            //                                    "${activity.filesDir.path}/sessions/sessions.json",
+                            //                                    featuresConfig.draftConfig.duration
+                            //                                )
+                            //                                VideoCreationActivity.startFromDrafts(
+                            //                                    context = activity,
+                            //                                    predefinedDraft = draft,
+                            //                                    extras = prepareExtras(featuresConfig)
+                            //                                )
+                            //                            }
+
+                            SCREEN_PIP -> {
+                                val videoSources =
+                                    call.argument<List<String>>(INPUT_PARAM_VIDEO_SOURCES)
+                                Log.d(TAG, "Received pip video sources = $videoSources")
+
+                                if (videoSources.isNullOrEmpty()) {
+                                    channelResult?.error(
+                                        ERR_INVALID_PARAMS,
+                                        ERR_MESSAGE_MISSING_PIP_VIDEO,
+                                        null
+                                    )
+                                    return@initialize
+                                }
+
+                                val videoUri = Uri.fromFile(File(videoSources.first()))
+                                Log.d(TAG, "Start video editor in pip mode with video = $videoUri")
+
+                                VideoCreationActivity.startFromCamera(
+                                    context = activity,
+                                    // setup data that will be acceptable during export flow
+                                    additionalExportData = null,
+                                    // set TrackData object if you open VideoCreationActivity with preselected music track
+                                    audioTrackData = null,
+                                    // set PiP video configuration
+                                    pictureInPictureConfig = PipConfig(
+                                        video = videoUri,
+                                        openPipSettings = false
+                                    ),
+                                    extras = prepareExtras(featuresConfig)
+                                )
+                            }
+
+                            SCREEN_TRIMMER -> {
+                                val videoSources =
+                                    call.argument<List<String>>(INPUT_PARAM_VIDEO_SOURCES)
+                                Log.d(TAG, "Received trimmer video sources = $videoSources")
+
+                                if (videoSources.isNullOrEmpty()) {
+                                    channelResult?.error(
+                                        ERR_INVALID_PARAMS,
+                                        ERR_MESSAGE_MISSING_TRIMMER_VIDEO_SOURCES,
+                                        null
+                                    )
+                                    return@initialize
+                                }
+
+                                VideoCreationActivity.startFromTrimmer(
+                                    context = activity,
+                                    // setup data that will be acceptable during export flow
+                                    additionalExportData = null,
+                                    // set TrackData object if you open VideoCreationActivity with preselected music track
+                                    audioTrackData = null,
+                                    // set Trimmer video configuration
+                                    predefinedVideos = videoSources.map { Uri.fromFile(File(it)) }
+                                        .toTypedArray(),
+                                    extras = prepareExtras(featuresConfig)
+                                )
+                            }
+
+                            else -> null
                         }
 
-                        else -> null
+                        if (intent == null) {
+                            Log.e(TAG, "Cannot start: unknown screen = $screen")
+                            channelResult?.error(
+                                ERR_INVALID_PARAMS,
+                                ERR_MESSAGE_UNKNOWN_SCREEN,
+                                null
+                            )
+                            return@initialize
+                        }
+
+                        activity.startActivityForResult(intent as Intent, VIDEO_EDITOR_REQUEST_CODE)
                     }
 
-                    if (intent == null) {
-                        Log.e(TAG, "Cannot start: unknown screen = $screen")
-                        channelResult?.error(ERR_INVALID_PARAMS, ERR_MESSAGE_UNKNOWN_SCREEN, null)
-                        return@initialize
-                    }
-
-                    activity.startActivityForResult(intent as Intent, VIDEO_EDITOR_REQUEST_CODE)
                 }
             }
 
@@ -213,12 +270,14 @@ class VeSdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Acti
         } else {
             musicEffects.first().title
         }
+        val draftData =
+            DraftLocalHelper.getLatestSessionInfo("${currentActivity?.filesDir?.path}/sessions/sessions.json")
         val data = mapOf(
             EXPORTED_VIDEO_SOURCES to videoSources,
             EXPORTED_PREVIEW to previewPath,
             EXPORTED_META to result.metaUri.toString(),
-            EXPORTED_MUSTIC_TRACK to musicEffectTitle
-
+            EXPORTED_MUSTIC_TRACK to musicEffectTitle,
+            DRAFT_VIDEO_SEQUENCE to draftData.toString(),
         )
         return data
     }

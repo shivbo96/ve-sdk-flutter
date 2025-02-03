@@ -19,12 +19,16 @@ internal const val INPUT_PARAM_TOKEN = "token"
 internal const val INPUT_PARAM_FEATURES_CONFIG = "featuresConfig"
 internal const val INPUT_PARAM_SCREEN = "screen"
 internal const val INPUT_PARAM_VIDEO_SOURCES = "videoSources"
+internal const val INPUT_PARAM_DRAFT_VIDEO_SEQUENCE = "draftSequenceId"
+
 
 // Exported params
 internal const val EXPORTED_VIDEO_SOURCES = "exportedVideoSources"
 internal const val EXPORTED_PREVIEW = "exportedPreview"
 internal const val EXPORTED_META = "exportedMeta"
 internal const val EXPORTED_MUSTIC_TRACK = "musicFileName"
+internal const val DRAFT_INDEX = "draftIndex"
+internal const val DRAFT_VIDEO_SEQUENCE = "draftVideoSequence"
 
 // Features config params
 internal const val FEATURES_CONFIG_AI_CAPTIONS = "aiCaptions"
@@ -58,6 +62,7 @@ internal const val FEATURES_CONFIG_DURATION_CONFIG_VIDEO_DURATIONS = "videoDurat
 internal const val FEATURES_CONFIG_DRAFT_CONFIG = "draftConfig"
 internal const val FEATURES_CONFIG_DURATION_CONFIG = "durationConfig"
 internal const val FEATURES_CONFIG_DRAFT_CONFIG_OPTION = "option"
+internal const val FEATURES_CONFIG_DRAFT_CONFIG_DURATION = "duration"
 
 internal const val FEATURES_CONFIG_DRAFT_CONFIG_ASK_TO_SAVE = "askToSave"
 internal const val FEATURES_CONFIG_DRAFT_CONFIG_CLOSE_ON_SAVE = "closeOnSave"
@@ -68,6 +73,9 @@ internal const val FEATURES_CONFIG_DRAFT_CONFIG_DISABLED = "disabled"
 internal const val SCREEN_CAMERA = "camera"
 internal const val SCREEN_PIP = "pip"
 internal const val SCREEN_TRIMMER = "trimmer"
+internal const val SCREEN_GET_ALL_DRAFT = "getAllDraft"
+internal const val SCREEN_REMOVE_DRAFT = "removeDraft"
+internal const val SCREEN_EDITOR = "editor"
 
 // Errors
 internal const val ERR_CODE_SDK_NOT_INITIALIZED = "ERR_SDK_NOT_INITIALIZED"

@@ -53,9 +53,11 @@ internal val defaultDurationConfig = CameraConfig(
 )
 
 internal data class DraftConfig(
-    val option: String
+    val option: String,
+    val duration: Long
 )
 
 internal val defaultDraftConfig = DraftConfig(
-    option = "askToSave"
+    option = "askToSave",
+    duration = 0
 )

@@ -69,6 +69,29 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<void> _startDraftEditorInCameraMode() async {
+    // Specify your Config params in the builder below
+
+    final FeaturesConfigBuilder configBuilder = FeaturesConfigBuilder()
+        .setDraftConfig(DraftConfig.fromOption(DraftOption.auto))
+        .setEditorConfig(const EditorConfig(enableVideoCover: false, enableVideoAspectFill: false));
+
+    final DurationConfig durationConfig = Platform.isAndroid
+        ? const DurationConfig(videoDurations: [60000, 30000, 15000], maximumVideoDuration: 60000)
+        : const DurationConfig(videoDurations: [60, 30, 15], maximumVideoDuration: 60);
+
+    configBuilder.setDurationConfig(durationConfig);
+
+    final FeaturesConfig config = configBuilder.build();
+
+    try {
+      dynamic exportResult = await _veSdkFlutterPlugin.openEditorFromDraft(licenseToken, '1738580028138', config);
+      _handleExportResult(exportResult);
+    } on PlatformException catch (e) {
+      _handlePlatformException(e);
+    }
+  }
+
   Future<void> _startVideoEditorInPipMode() async {
     // Specify your Config params in the builder below
 
@@ -258,10 +281,12 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(12.0),
               splashColor: Colors.blueAccent,
               minWidth: 240,
+              // onPressed: () => _startDraftEditorInCameraMode(),
               onPressed: () async {
                 try {
-                  final List<dynamic>? exportResult = await _veSdkFlutterPlugin.getAllDraftList(licenseToken);
-                  _handleAllDraftListResult(exportResult);
+                  final bool? exportResult =
+                      await _veSdkFlutterPlugin.removeDraftFromList(licenseToken, draftSequenceId: '1738580028138');
+                  print('exportResult=> $exportResult');
                 } on PlatformException catch (e) {
                   _handlePlatformException(e);
                 }
