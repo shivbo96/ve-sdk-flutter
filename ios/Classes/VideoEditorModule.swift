@@ -51,6 +51,7 @@ class VideoEditorModule: VideoEditor {
         config.featureConfiguration.isVideoCoverSelectionEnabled = featuresConfig.editorConfig.enableVideoCover
         config.featureConfiguration.isAspectsEnabled = false
         config.featureConfiguration.draftsConfig = .enabledSaveToDraftsByDefault
+        config.featureConfiguration.isDraftSavedToastEnabled = false
         AudioBrowserConfig.shared.musicSource = .localStorageWithMyFiles
         
         
