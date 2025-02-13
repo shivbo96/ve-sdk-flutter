@@ -14,7 +14,7 @@ import com.banuba.sdk.audiobrowser.feedfm.AutoCutBanubaTrackLoader
 import com.banuba.sdk.audiobrowser.soundstripe.AutoCutSoundstripeTrackLoader
 import com.banuba.sdk.audiobrowser.soundstripe.SoundstripeProvider
 import com.banuba.sdk.cameraui.data.CameraConfig
-import com.banuba.sdk.core.data.DraftsHelper
+import com.banuba.sdk.veui.data.EditorConfig
 import com.banuba.sdk.core.data.TrackData
 import com.banuba.sdk.core.data.autocut.AutoCutTrackLoader
 import com.banuba.sdk.core.domain.DraftConfig
@@ -31,6 +31,7 @@ import com.banuba.sdk.ve.di.VeSdkKoinModule
 import com.banuba.sdk.ve.flow.di.VeFlowKoinModule
 import com.banuba.sdk.veui.di.VeUiSdkKoinModule
 import com.banuba.sdk.veui.domain.CoverProvider
+import com.banuba.sdk.veui.domain.TrimmerAction
 import org.json.JSONException
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -137,11 +138,30 @@ private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig) {
             }
         }
 
+        single<EditorConfig>{
+            EditorConfig(
+                maxTotalVideoDurationMs = featuresConfig.durationConfig.maximumVideoDuration,
+//                trimmerMinSourceVideoDurationMs = 3000,
+                slideShowSourceVideoDurationMs = 3000,
+                minTotalVideoDurationMs = 3000
+            )
+        }
+
+
+//        this.single<ExportSessionHelper> {
+//            FlowExportSessionHelper(
+//                draftManager = get()
+//            )
+//        }
+
         single {
             CameraConfig(
                 maxRecordedTotalVideoDurationMs = featuresConfig.durationConfig.maximumVideoDuration,
-                videoDurations = featuresConfig.durationConfig.videoDurations
+                videoDurations = featuresConfig.durationConfig.videoDurations,
+                minRecordedTotalVideoDurationMs =  3000,
+
             )
+
         }
 
         if (!featuresConfig.editorConfig.enableVideoAspectFill) {
@@ -167,6 +187,7 @@ private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig) {
                 CoverProvider.NONE
             }
         }
+
 
         factory<DraftConfig> {
             when (featuresConfig.draftConfig.option) {

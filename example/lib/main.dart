@@ -45,6 +45,8 @@ class _HomePageState extends State<HomePage> {
 
   String? selectedMusicName;
 
+  String draftSequenceId = '';
+
   Future<void> _startVideoEditorInCameraMode() async {
     // Specify your Config params in the builder below
 
@@ -85,7 +87,7 @@ class _HomePageState extends State<HomePage> {
     final FeaturesConfig config = configBuilder.build();
 
     try {
-      dynamic exportResult = await _veSdkFlutterPlugin.openEditorFromDraft(licenseToken, '1738580028138', config);
+      dynamic exportResult = await _veSdkFlutterPlugin.openEditorFromDraft(licenseToken, draftSequenceId, config);
       _handleExportResult(exportResult);
     } on PlatformException catch (e) {
       _handlePlatformException(e);
@@ -149,6 +151,7 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       selectedMusicName = result.musicFileName;
+      draftSequenceId = result.draftSequence??'';
     });
 
     debugPrint('Exported musicFileName = ${result.musicFileName}');
@@ -281,16 +284,16 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(12.0),
               splashColor: Colors.blueAccent,
               minWidth: 240,
-              // onPressed: () => _startDraftEditorInCameraMode(),
-              onPressed: () async {
-                try {
-                  final bool? exportResult =
-                      await _veSdkFlutterPlugin.removeDraftFromList(licenseToken, draftSequenceId: '1738580028138');
-                  print('exportResult=> $exportResult');
-                } on PlatformException catch (e) {
-                  _handlePlatformException(e);
-                }
-              },
+              onPressed: () => _startDraftEditorInCameraMode(),
+              // onPressed: () async {
+              //   try {
+              //     final bool? exportResult =
+              //         await _veSdkFlutterPlugin.removeDraftFromList(licenseToken, draftSequenceId: '1738580028138');
+              //     print('exportResult=> $exportResult');
+              //   } on PlatformException catch (e) {
+              //     _handlePlatformException(e);
+              //   }
+              // },
               child: const Text(
                 'Get all draft List',
                 style: TextStyle(
