@@ -47,10 +47,10 @@ class VideoEditorModule: VideoEditor {
     
         config.videoDurationConfiguration.maximumVideoDuration = featuresConfig.durationConfig.maximumVideoDuration
 //        config.videoDurationConfiguration.minimumTrimmedPartDuration = 3
-        config.videoDurationConfiguration.minimumVideoDuration = 3
-//        config.videoDurationConfiguration.slideshowDuration = 3
-        config.videoDurationConfiguration.minimumDurationFromCamera = 3
-        config.videoDurationConfiguration.minimumDurationFromGallery = 3
+        config.videoDurationConfiguration.minimumVideoDuration = 4
+        config.videoDurationConfiguration.slideshowDuration = 4
+        config.videoDurationConfiguration.minimumDurationFromCamera = 4
+        config.videoDurationConfiguration.minimumDurationFromGallery = 4
         
         config.videoDurationConfiguration.videoDurations = featuresConfig.durationConfig.videoDurations
         config.featureConfiguration.isVideoCoverSelectionEnabled = featuresConfig.editorConfig.enableVideoCover
