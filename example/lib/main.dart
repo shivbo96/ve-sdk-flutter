@@ -51,9 +51,7 @@ class _HomePageState extends State<HomePage> {
     // Specify your Config params in the builder below
 
     final FeaturesConfigBuilder configBuilder = FeaturesConfigBuilder()
-        .setDraftConfig(DraftConfig.fromOption(DraftOption.auto))
-        .setEditorConfig(
-            const EditorConfig(enableVideoCover: false, saveButtonText: "Post", enableVideoAspectFill: false));
+        .setDraftConfig(DraftConfig.fromOption(DraftOption.auto));
 
     final DurationConfig durationConfig = Platform.isAndroid
         ? const DurationConfig(videoDurations: [60000, 30000, 15000], maximumVideoDuration: 60000)
@@ -76,7 +74,10 @@ class _HomePageState extends State<HomePage> {
 
     final FeaturesConfigBuilder configBuilder = FeaturesConfigBuilder()
         .setDraftConfig(DraftConfig.fromOption(DraftOption.auto))
-        .setEditorConfig(const EditorConfig(enableVideoCover: false, enableVideoAspectFill: false));
+        .setEditorConfig(const EditorConfig(
+          enableVideoCover: true,
+          enableVideoAspectFill: false,
+        ));
 
     final DurationConfig durationConfig = Platform.isAndroid
         ? const DurationConfig(videoDurations: [60000, 30000, 15000], maximumVideoDuration: 60000)
@@ -151,7 +152,7 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       selectedMusicName = result.musicFileName;
-      draftSequenceId = result.draftSequence??'';
+      draftSequenceId = result.draftSequence ?? '';
     });
 
     debugPrint('Exported musicFileName = ${result.musicFileName}');
@@ -164,6 +165,7 @@ class _HomePageState extends State<HomePage> {
 
     // Meta file where you can find short data used in exported video
     debugPrint('Exported meta file = ${result.metaFilePath}');
+    debugPrint('Exported draftSequence = ${result.draftSequence}');
   }
 
   void _handleAllDraftListResult(List<dynamic>? result) {

@@ -429,7 +429,7 @@ class VideoEditorModule: VideoEditor {
 
 // MARK: - Export flow
 extension VideoEditorModule {
-    func exportVideo(draft: BanubaVideoEditorSDK.ExternalDraft) {
+    func exportVideo(draft: BanubaVideoEditorSDK.ExternalDraft?) {
         let progressView = ProgressViewController.makeViewController()
         
         progressView.cancelHandler = { [weak self] in
@@ -499,7 +499,7 @@ extension VideoEditorModule {
         }
     }
     
-    private func completeExport(videoUrls: [URL], metaUrl: URL?, previewUrl: URL, error: Error?, previewImage: UIImage?,draft: BanubaVideoEditorSDK.ExternalDraft) {
+    private func completeExport(videoUrls: [URL], metaUrl: URL?, previewUrl: URL, error: Error?, previewImage: UIImage?,draft: BanubaVideoEditorSDK.ExternalDraft?) {
         videoEditorSDK?.dismissVideoEditor(animated: true) {
             let success = error == nil
             if success {
@@ -514,7 +514,7 @@ extension VideoEditorModule {
                     VeSdkFlutterPlugin.argExportedVideoSources: videoUrls.compactMap { $0.path },
                     VeSdkFlutterPlugin.argExportedPreview: previewUrl.path,
                     VeSdkFlutterPlugin.argExportedMeta: metaUrl?.path,
-                    VeSdkFlutterPlugin.draftVideoSequence: draft.sequenceId,
+                    VeSdkFlutterPlugin.draftVideoSequence: draft?.sequenceId,
                     VeSdkFlutterPlugin.musicFileName: self.videoEditorSDK?.musicMetadata?.tracks.first?.title]
                 print("data \(data)")
                 self.flutterResult?(data)
@@ -551,8 +551,14 @@ extension VideoEditorModule {
 // MARK: - BanubaVideoEditorSDKDelegate
 extension VideoEditorModule: BanubaVideoEditorDelegate {
     func videoEditorDone(_ videoEditor: BanubaVideoEditorSDK.BanubaVideoEditor) {
-        
+        print("videoEditor: \(videoEditor.draftActionType.isSaveOrUpdate)")
+        if(videoEditor.draftActionType.isSaveOrUpdate == false){
+            exportVideo(draft: nil)
+//            self.flutterResult?(nil)
+        }
+       
     }
+  
     
     func videoEditorDidCancel(_ videoEditor: BanubaVideoEditor) {
         videoEditor.dismissVideoEditor(animated: true) {

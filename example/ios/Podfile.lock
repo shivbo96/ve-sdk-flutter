@@ -53,25 +53,25 @@ PODS:
   - image_picker_ios (0.0.1):
     - Flutter
   - ve_sdk_flutter (0.0.1):
-    - BanubaARCloudSDK (= 1.36.2)
-    - BanubaAudioBrowserSDK (= 1.36.2)
-    - BanubaLicenseServicingSDK (= 1.36.2)
-    - BanubaSDK (= 1.36.2)
-    - BanubaSDKServicing (= 1.36.2)
-    - BanubaSDKSimple (= 1.36.2)
-    - BanubaUtilities (= 1.36.2)
-    - BanubaVideoEditorGallerySDK (= 1.36.2)
-    - BanubaVideoEditorSDK (= 1.36.2)
-    - BNBLicenseUtils (= 1.36.2)
+    - BanubaARCloudSDK (= 1.39.7)
+    - BanubaAudioBrowserSDK (= 1.39.7)
+    - BanubaLicenseServicingSDK (= 1.39.7)
+    - BanubaSDK (= 1.39.7)
+    - BanubaSDKServicing (= 1.39.7)
+    - BanubaSDKSimple (= 1.39.7)
+    - BanubaUtilities (= 1.39.7)
+    - BanubaVideoEditorGallerySDK (= 1.39.7)
+    - BanubaVideoEditorSDK (= 1.39.7)
+    - BNBLicenseUtils (= 1.39.7)
     - Flutter
-    - VEEffectsSDK (= 1.36.2)
-    - VEExportSDK (= 1.36.2)
-    - VEPlaybackSDK (= 1.36.2)
-    - VideoEditor (= 1.36.2)
-  - VEEffectsSDK (1.36.2)
-  - VEExportSDK (1.36.2)
-  - VEPlaybackSDK (1.36.2)
-  - VideoEditor (1.36.2)
+    - VEEffectsSDK (= 1.39.7)
+    - VEExportSDK (= 1.39.7)
+    - VEPlaybackSDK (= 1.39.7)
+    - VideoEditor (= 1.39.7)
+  - VEEffectsSDK (1.39.7)
+  - VEExportSDK (1.39.7)
+  - VEPlaybackSDK (1.39.7)
+  - VideoEditor (1.39.7)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -115,34 +115,34 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/ve_sdk_flutter/ios"
 
 SPEC CHECKSUMS:
-  BanubaARCloudSDK: 6f0e4f4fe6a413b76d40bd8df86549ffd16028c4
-  BanubaAudioBrowserSDK: 0a0c906b88afb5652a88e5b743d0ee9a9a419597
-  BanubaLicenseServicingSDK: 818b4edecc09c1dffac1090a17dec975b6dd5e6d
-  BanubaSDK: a8f9c94fb6711d5d0ac94715c5da38947c0d57de
-  BanubaSDKServicing: 67afdb8400939d69c0964e6efecccea1a9421aa3
-  BanubaSDKSimple: 9267c608788f8af40041e63a87afc4290f2900cc
-  BanubaUtilities: e07d00f82d1737b58cd36717bc0239bf1904ee2d
-  BanubaVideoEditorGallerySDK: ad44735e642264c564d15fcc8210937969956b3e
-  BanubaVideoEditorSDK: 254d0888ec6485b49456e64fc8d5314b279a1866
-  BNBBackground: ca29dc26acd50be890a7a65c78540be65e2c7448
-  BNBEffectPlayer: 4a1bc6579d19c41ba9b4c49c9aba979d1c873464
-  BNBEyes: ade036243d9f2cca81946c19c3ea2be145d8fea2
-  BNBFaceTracker: 555de45ab376c4e07fb7f1bd7b093891e4d6c680
-  BNBHair: a79ab74a0c0c7386d2623e03147450833af64507
-  BNBLicenseUtils: 1bdd229b5b668135e7d884346e02f6bb03cdbbf0
-  BNBLips: 4548a9ab1be43a67beaed67a4c51dde59ad9730d
-  BNBScripting: 8ca85618df16c24b47a04cf9cba82d175d4bd4cb
-  BNBSdkApi: c86bbb2a1286e27f08d86dbceabadcfccf5237ce
-  BNBSdkCore: 5d4ac8e8ba51a032720057da736cb060b3ff6986
-  BNBSkin: f7c0e200fad3f3195ae102d4b437fbe1e5f2f82c
+  BanubaARCloudSDK: 253807db0798aabb5049f5d8dad7f07195a7aa41
+  BanubaAudioBrowserSDK: c6e76f6b070dfed2b4d2574fbb9c577536cda3cd
+  BanubaLicenseServicingSDK: e7ead71083716694a903f12dde7c2f00cc05d42d
+  BanubaSDK: ae05b1276e2004747419e635f4761ff038ee471e
+  BanubaSDKServicing: f5bd73851a1e2fa5436846cb23c8e70a55031293
+  BanubaSDKSimple: 49bfee876c53667749ff903185f6e5fea6525bab
+  BanubaUtilities: 213a37046f5035a54bba6a06a116cc3121aa013a
+  BanubaVideoEditorGallerySDK: 13733c254a1edc22e19c3a5a7eacb377cb9092e7
+  BanubaVideoEditorSDK: d1c1459f2be78cf47a1bae6abaa97a0ebeb1e18b
+  BNBBackground: cdbc07dc698d2d094cc676e0e77845e219d9e2ba
+  BNBEffectPlayer: d5813b05afce282f0959e31fda877a06dbed1bce
+  BNBEyes: be819e28d00a26973cdaa59f5c5be32e183ba272
+  BNBFaceTracker: 94cc4c1b1868bf6dfcb093bd40db94c36b119745
+  BNBHair: a7b3d3116853bf628db67b00491e95cc22b17f04
+  BNBLicenseUtils: 5403637529a50688d5c3cb684a1b2db185867fa8
+  BNBLips: ecbe48023ef3652dce83e165a50884de7baecd26
+  BNBScripting: 3e851d230e201e06bf94b0f75a561c18cc15877c
+  BNBSdkApi: a05a2201214e3e7f8920f645fbb98d5b8df4fe19
+  BNBSdkCore: 90da0c0c1fe1f10377d4ab1e00aa701926faea17
+  BNBSkin: 1f6ff9507b1e35af1469e4fc91270154149ab673
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  image_picker_ios: b545a5f16c0fa88e3ecbbce3ed4de45567a8ec18
-  ve_sdk_flutter: cfef1fb1424cd39d5a5f014202b0dd21e71f55af
-  VEEffectsSDK: 773185af662a3c8777fa613328e7debb8ce644cf
-  VEExportSDK: 1067d2aed09aab1b46d652a1ea587482caaf0118
-  VEPlaybackSDK: f4a84933c939973ca91ae550bb9af9b520c13a13
-  VideoEditor: 476d078b64e68dc9d096416da37cb73aea200856
+  image_picker_ios: a768de0d44b0925de635738f5030f9f2727eb996
+  ve_sdk_flutter: 6386b26e3a85c90d41ed09e82755d29c0d3cb265
+  VEEffectsSDK: 2ba258d3c08f3598af51a98bfeb6fcc6c339b07a
+  VEExportSDK: 83f2845235beed640495dbac76bbfedac093e306
+  VEPlaybackSDK: db16929456bd89f9b641eb1d67c2abb972572d2f
+  VideoEditor: feee553772f7f31a329d7b3d0b4f800a7d2ea0eb
 
 PODFILE CHECKSUM: 73d8a17446cd2f1c034d597d281fbd949e555c7b
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2
