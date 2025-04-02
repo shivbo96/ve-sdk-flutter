@@ -19,24 +19,24 @@ A new Flutter project.
   s.dependency 'Flutter'
   s.platform = :ios, '15.0'
 
-  sdk_version = '1.39.7'
+  sdk_version = ' 1.41.0'
 
   s.dependency 'BanubaARCloudSDK', sdk_version #optional
   s.dependency 'BanubaVideoEditorSDK', sdk_version
   s.dependency 'BanubaAudioBrowserSDK', sdk_version #optional
   s.dependency 'BanubaSDK', sdk_version #optional
   s.dependency 'BanubaSDKSimple', sdk_version
-  s.dependency 'BanubaSDKServicing', sdk_version
-  s.dependency 'VideoEditor', sdk_version
+#   s.dependency 'BanubaSDKServicing', sdk_version
+#   s.dependency 'VideoEditor', sdk_version
   s.dependency 'BanubaUtilities', sdk_version
-  s.dependency 'BanubaVideoEditorGallerySDK', sdk_version #optional
+#   s.dependency 'BanubaVideoEditorGallerySDK', sdk_version #optional
   s.dependency 'BanubaLicenseServicingSDK', sdk_version
 
   s.dependency 'BNBLicenseUtils', sdk_version
 
-  s.dependency 'VEExportSDK', sdk_version
-  s.dependency 'VEEffectsSDK', sdk_version
-  s.dependency 'VEPlaybackSDK', sdk_version
+#   s.dependency 'VEExportSDK', sdk_version
+#   s.dependency 'VEEffectsSDK', sdk_version
+#   s.dependency 'VEPlaybackSDK', sdk_version
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }

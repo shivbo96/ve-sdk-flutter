@@ -2,6 +2,7 @@ package com.banuba.ve.sdk.flutter.plugin.ve_sdk_flutter
 
 import android.app.Application
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
@@ -9,9 +10,10 @@ import com.banuba.sdk.arcloud.data.source.ArEffectsRepositoryProvider
 import com.banuba.sdk.arcloud.di.ArCloudKoinModule
 import com.banuba.sdk.audiobrowser.data.MubertApiConfig
 import com.banuba.sdk.audiobrowser.di.AudioBrowserKoinModule
+import com.banuba.sdk.audiobrowser.domain.AiClippingRecommendedSoundProvider
 import com.banuba.sdk.audiobrowser.domain.AudioBrowserMusicProvider
-import com.banuba.sdk.audiobrowser.feedfm.AutoCutBanubaTrackLoader
-import com.banuba.sdk.audiobrowser.soundstripe.AutoCutSoundstripeTrackLoader
+import com.banuba.sdk.audiobrowser.feedfm.AiClippingBanubaMusicTrackLoader
+import com.banuba.sdk.audiobrowser.soundstripe.AiClippingSoundstripeTrackLoader
 import com.banuba.sdk.audiobrowser.soundstripe.SoundstripeProvider
 import com.banuba.sdk.cameraui.data.CameraConfig
 import com.banuba.sdk.veui.data.EditorConfig
@@ -24,9 +26,9 @@ import com.banuba.sdk.gallery.di.GalleryKoinModule
 import com.banuba.sdk.playback.PlayerScaleType
 import com.banuba.sdk.playback.di.VePlaybackSdkKoinModule
 import com.banuba.sdk.ve.data.EditorAspectSettings
+import com.banuba.sdk.ve.data.aiclipping.AiClippingConfig
 import com.banuba.sdk.ve.data.aspect.AspectSettings
 import com.banuba.sdk.ve.data.aspect.AspectsProvider
-import com.banuba.sdk.ve.data.autocut.AutoCutConfig
 import com.banuba.sdk.ve.di.VeSdkKoinModule
 import com.banuba.sdk.ve.flow.di.VeFlowKoinModule
 import com.banuba.sdk.veui.di.VeUiSdkKoinModule
@@ -115,22 +117,29 @@ private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig) {
         }
 
         featuresConfig.aiClipping?.let { params ->
-            this.single {
-                AutoCutConfig(
+            factory {
+                AiClippingConfig(
                     audioDataUrl = params.audioDataUrl,
                     audioTracksUrl = params.audioTracksUrl
                 )
             }
+
+            factory<ContentFeatureProvider<TrackData, Fragment>>(
+                named("recommendedSoundsMusicTrackProvider")
+            ) {
+                AiClippingRecommendedSoundProvider()
+            }
+
             this.single<AutoCutTrackLoader> {
                 when (featuresConfig.audioBrowser.source) {
                     FEATURES_CONFIG_AUDIO_BROWSER_SOURCE_BANUBA_MUSIC -> {
-                        AutoCutBanubaTrackLoader(
+                        AiClippingBanubaMusicTrackLoader(
                             contentProvider = get()
                         )
                     }
 
                     else -> {
-                        AutoCutSoundstripeTrackLoader(
+                        AiClippingSoundstripeTrackLoader(
                             soundstripeApi = get()
                         )
                     }
@@ -138,12 +147,12 @@ private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig) {
             }
         }
 
-        single<EditorConfig>{
+        single<EditorConfig> {
             EditorConfig(
                 maxTotalVideoDurationMs = featuresConfig.durationConfig.maximumVideoDuration,
 //                trimmerMinSourceVideoDurationMs = 3000,
-                slideShowSourceVideoDurationMs = 3000,
-                minTotalVideoDurationMs = 3000
+                slideShowSourceVideoDurationMs = 4000,
+                minTotalVideoDurationMs = 4000
             )
         }
 
@@ -158,9 +167,9 @@ private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig) {
             CameraConfig(
                 maxRecordedTotalVideoDurationMs = featuresConfig.durationConfig.maximumVideoDuration,
                 videoDurations = featuresConfig.durationConfig.videoDurations,
-                minRecordedTotalVideoDurationMs =  3000,
+                minRecordedTotalVideoDurationMs = 4000,
 
-            )
+                )
 
         }
 
@@ -178,6 +187,10 @@ private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig) {
                         allAspects = availableAspects,
                         default = EditorAspectSettings.Original()
                     )
+                }
+
+                override fun setBundle(bundle: Bundle) {
+
                 }
             }
         }

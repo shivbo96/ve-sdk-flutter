@@ -8,8 +8,10 @@
 import Foundation
 import BanubaVideoEditorSDK
 import BanubaAudioBrowserSDK
-import VideoEditor
-import VEExportSDK
+import Foundation
+import BanubaVideoEditorSDK
+import BanubaAudioBrowserSDK
+import BanubaVideoEditorCore
 import Flutter
 
 protocol VideoEditor {
@@ -81,6 +83,18 @@ class VideoEditorModule: VideoEditor {
                     color: UIColor.white // Set the background color, replace with the desired UIColor
                   )
                 );
+        
+//        config.filterConfiguration.resetButton = RoundedButtonConfiguration(
+//            textConfiguration: TextConfiguration(
+//                font: UIFont.systemFont(ofSize: 16.0),
+//                color: UIColor.red,
+//              text: "Discard"
+//            ),
+//            cornerRadius:16.0,
+//            backgroundColor: UIColor.white
+//          );
+        
+                    
 
         config.applyFeatureConfig(featuresConfig)
 
@@ -617,7 +631,7 @@ extension VideoEditorConfig {
 //         }
 
            if let aiClipping = featuresConfig.aiClipping, let audioTracksUrl = URL(string: aiClipping.audioTracksUrl) {
-                    self.autoCutConfiguration.embeddingsDownloadUrl = aiClipping.audioDataUrl
+                    self.aiClippingConfiguration.embeddingsDownloadUrl = aiClipping.audioDataUrl
 //                     self.autoCutConfiguration.musicProvider =
 //                         switch featuresConfig.audioBrowser.value() {
 //                             case .banubaMusic:
