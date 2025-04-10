@@ -48,6 +48,7 @@ import android.content.Context
 import android.app.Activity
 import android.net.Uri
 import android.os.Bundle
+import com.banuba.sdk.veui.domain.CoverProvider
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -174,6 +175,12 @@ private class SampleIntegrationVeKoinModule(
                 named("recommendedSoundsMusicTrackProvider")
             ) {
                 AiClippingRecommendedSoundProvider()
+            }
+
+            if (!featuresConfig.editorConfig.enableVideoCover) {
+                single<CoverProvider> {
+                    CoverProvider.NONE
+                }
             }
 
             this.single<AutoCutTrackLoader> {

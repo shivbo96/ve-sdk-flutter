@@ -41,6 +41,8 @@ class _HomePageState extends State<HomePage> {
   final _veSdkFlutterPlugin = VeSdkFlutter();
   String _errorMessage = '';
 
+  String draftSequenceId = '';
+
   Future<void> _startVideoEditorInCameraMode() async {
     final FeaturesConfigBuilder configBuilder = FeaturesConfigBuilder()
       ..enableEditorV2(true)
@@ -49,7 +51,7 @@ class _HomePageState extends State<HomePage> {
         180.0,
         120.0,
       ]))
-      ..setEditorConfig(const EditorConfig(enableVideoCover: false, enableVideoAspectFill: true,saveButtonText: "POST"))
+      ..setEditorConfig(const EditorConfig(enableVideoCover: true, enableVideoAspectFill: true, saveButtonText: "POST"))
       ..setDraftsConfig(DraftsConfig.fromOption(DraftsOption.auto));
 
     // const VideoDurationConfig durationConfig = VideoDurationConfig(videoDurations: [120,60, 30, 15], maxTotalVideoDuration: 120);
@@ -59,19 +61,12 @@ class _HomePageState extends State<HomePage> {
 
     // Export data example
 
-    // const exportData = ExportData(exportedVideos: [
-    //   ExportedVideo(
-    //       fileName: "export_HD",
-    //       videoResolution: VideoResolution.hd720p
-    //   )],
-    //     watermark: Watermark(
-    //        imagePath: "assets/watermark.png",
-    //        alignment: WatermarkAlignment.topLeft
-    //     )
-    // );
+    const exportData = ExportData(
+        exportedVideos: [ExportedVideo(fileName: "export_HD", videoResolution: VideoResolution.hd720p)],
+        watermark: Watermark(imagePath: "assets/watermark.png", alignment: WatermarkAlignment.topLeft));
 
     try {
-      dynamic exportResult = await _veSdkFlutterPlugin.openCameraScreen(licenseToken, config);
+      dynamic exportResult = await _veSdkFlutterPlugin.openCameraScreen(licenseToken, config, exportData: exportData);
       _handleExportResult(exportResult);
     } on PlatformException catch (e) {
       _handlePlatformException(e);
@@ -96,6 +91,27 @@ class _HomePageState extends State<HomePage> {
 
     try {
       dynamic exportResult = await _veSdkFlutterPlugin.openPipScreen(licenseToken, config, sourceVideoFile);
+      _handleExportResult(exportResult);
+    } on PlatformException catch (e) {
+      _handlePlatformException(e);
+    }
+  }
+
+  Future<void> _startDraftEditorInCameraMode() async {
+    // Specify your Config params in the builder below
+
+    final FeaturesConfigBuilder configBuilder =
+        FeaturesConfigBuilder().setDraftsConfig(DraftsConfig.fromOption(DraftsOption.auto));
+
+    const VideoDurationConfig durationConfig =
+        VideoDurationConfig(videoDurations: [60, 30, 15], maxTotalVideoDuration: 60);
+
+    configBuilder.setVideoDurationConfig(durationConfig);
+
+    final FeaturesConfig config = configBuilder.build();
+
+    try {
+      dynamic exportResult = await _veSdkFlutterPlugin.openEditorFromDraft(licenseToken, draftSequenceId, config);
       _handleExportResult(exportResult);
     } on PlatformException catch (e) {
       _handlePlatformException(e);
@@ -145,6 +161,11 @@ class _HomePageState extends State<HomePage> {
     debugPrint('Exported meta file = ${result.metaFilePath}');
 
     debugPrint('Exported music file = ${result.audioMeta?.firstOrNull?.title}');
+
+    setState(() {
+      draftSequenceId = result.draftSequence ?? '';
+      print('draftSequenceId=> $draftSequenceId');
+    });
   }
 
   void _handlePlatformException(PlatformException exception) {
@@ -249,6 +270,32 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () => _startVideoEditorInTrimmerMode(),
                     child: const Text(
                       'Open Video Editor - Trimmer screen',
+                      style: TextStyle(
+                        fontSize: 14.0,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  MaterialButton(
+                    color: Colors.blue,
+                    textColor: Colors.white,
+                    disabledColor: Colors.grey,
+                    disabledTextColor: Colors.black,
+                    padding: const EdgeInsets.all(12.0),
+                    splashColor: Colors.blueAccent,
+                    minWidth: 240,
+                    onPressed: () => _startDraftEditorInCameraMode(),
+                    // onPressed: () async {
+                    //   try {
+                    //     final bool? exportResult =
+                    //         await _veSdkFlutterPlugin.removeDraftFromList(licenseToken, draftSequenceId: '1738580028138');
+                    //     print('exportResult=> $exportResult');
+                    //   } on PlatformException catch (e) {
+                    //     _handlePlatformException(e);
+                    //   }
+                    // },
+                    child: const Text(
+                      'Get all draft List',
                       style: TextStyle(
                         fontSize: 14.0,
                       ),

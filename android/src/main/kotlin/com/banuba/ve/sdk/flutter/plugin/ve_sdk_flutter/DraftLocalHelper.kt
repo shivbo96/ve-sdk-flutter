@@ -26,10 +26,10 @@ object DraftLocalHelper {
                     Draft(
                         sameDayIndex = obj.getInt("sameDayIndex"),
                         creationTimestampMs = obj.getLong("created_at"),
-                        preview = Draft.Preview(
-                            uri = Uri.parse(obj.getString("preview")),
-                            rotation = Rotation.valueOf(obj.getString("preview_rotation"))
-                        ),
+//                        preview = Draft.Preview(
+//                            uri = Uri.parse(obj.getString("preview")),
+//                            rotation = Rotation.valueOf(obj.getString("preview_rotation"))
+//                        ),
                         dir = File(obj.getString("dir")),
                         durationMs = obj.getLong("duration")
                     )
@@ -48,6 +48,7 @@ object DraftLocalHelper {
     // Function to get full session object by createdAt
     fun getSessionByCreatedDate(filePath: String, createdAt: Long): Draft? {
         return parseSessionJson(filePath).find { it.creationTimestampMs == createdAt }
+
     }
 
     // Function to delete a session by createdAt
