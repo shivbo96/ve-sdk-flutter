@@ -18,7 +18,7 @@ internal data class FeaturesConfig(
     val draftsConfig: DraftsConfig = defaultDraftsConfig,
     val gifPickerConfig: GifPickerConfig? = null,
     val videoDurationConfig: VideoDurationConfig = defaultVideoDurationConfig,
-    val enableEditorV2: Boolean = false,
+    val enableEditorV2: Boolean = true,
     val processPictureExternally: Boolean = false
 )
 
@@ -55,11 +55,13 @@ internal val defaultAudioBrowser = AudioBrowser(
 )
 
 internal data class EditorConfig(
-    val enableVideoAspectFill: Boolean
+    val enableVideoAspectFill: Boolean,
+    val enableVideoCover: Boolean
 )
 
 internal val defaultEditorConfig = EditorConfig(
-    enableVideoAspectFill = true
+    enableVideoAspectFill = true,
+    enableVideoCover = true
 )
 
 internal data class DraftsConfig(

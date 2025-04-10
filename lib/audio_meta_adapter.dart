@@ -10,10 +10,13 @@ class AudioMetadata {
   AudioMetadata({required this.title, required this.audioUrl, required this.type});
 
   static List<AudioMetadata> parseAudioMetadata(String? jsonString) {
-    if (jsonString == null) {
+    if (jsonString == null ||
+        jsonString.isEmpty ||
+        (jsonString ?? 'null').toString() == 'null' ||
+        (jsonString ?? '[]').toString() == '[]') {
       return [];
     }
-    List<dynamic> jsonData = jsonDecode(jsonString);
+    List<dynamic> jsonData = jsonDecode(jsonString ?? '');
 
     return jsonData.map((item) {
       AudioType type = AudioType.track;
@@ -23,11 +26,7 @@ class AudioMetadata {
         type = (item["type"] == "VOICE") ? AudioType.voice : AudioType.track;
       }
 
-      return AudioMetadata(
-        title: item["title"] ?? "",
-        audioUrl: item["url"] ?? "",
-        type: type
-      );
+      return AudioMetadata(title: item["title"] ?? "", audioUrl: item["url"] ?? "", type: type);
     }).toList();
   }
 }

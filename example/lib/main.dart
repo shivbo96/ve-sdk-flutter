@@ -1,13 +1,14 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:ve_sdk_flutter/export_data.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ve_sdk_flutter/export_data.dart';
 import 'package:ve_sdk_flutter/export_result.dart';
 import 'package:ve_sdk_flutter/features_config.dart';
 import 'package:ve_sdk_flutter/ve_sdk_flutter.dart';
 
-const _licenseToken = SET UP YOUR LICENSE TOKEN;
+const licenseToken = 'YOUR_LICENSE_TOKEN';
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }
@@ -41,12 +42,20 @@ class _HomePageState extends State<HomePage> {
   String _errorMessage = '';
 
   Future<void> _startVideoEditorInCameraMode() async {
-    // Specify your Config params in the builder below
+    final FeaturesConfigBuilder configBuilder = FeaturesConfigBuilder()
+      ..enableEditorV2(true)
+      ..setVideoDurationConfig(const VideoDurationConfig(maxTotalVideoDuration: 180.0, videoDurations: [
+        60.0,
+        180.0,
+        120.0,
+      ]))
+      ..setEditorConfig(const EditorConfig(enableVideoCover: false, enableVideoAspectFill: true,saveButtonText: "POST"))
+      ..setDraftsConfig(DraftsConfig.fromOption(DraftsOption.auto));
 
-    final config = FeaturesConfigBuilder()
-        // .setAiCaptions(...)
-        // ...
-        .build();
+    // const VideoDurationConfig durationConfig = VideoDurationConfig(videoDurations: [120,60, 30, 15], maxTotalVideoDuration: 120);
+    // configBuilder.setVideoDurationConfig(durationConfig);
+    //
+    final FeaturesConfig config = configBuilder.build();
 
     // Export data example
 
@@ -62,8 +71,7 @@ class _HomePageState extends State<HomePage> {
     // );
 
     try {
-      dynamic exportResult = await _veSdkFlutterPlugin
-          .openCameraScreen(_licenseToken, config);
+      dynamic exportResult = await _veSdkFlutterPlugin.openCameraScreen(licenseToken, config);
       _handleExportResult(exportResult);
     } on PlatformException catch (e) {
       _handlePlatformException(e);
@@ -71,13 +79,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _startVideoEditorInPipMode() async {
-
     // Specify your Config params in the builder below
 
     final config = FeaturesConfigBuilder()
-      // .setAudioBrowser(...)
-      // ...
-      .build();
+        // .setAudioBrowser(...)
+        // ...
+        .build();
     final ImagePicker picker = ImagePicker();
     final videoFile = await picker.pickVideo(source: ImageSource.gallery);
 
@@ -88,8 +95,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     try {
-      dynamic exportResult = await _veSdkFlutterPlugin.openPipScreen(
-          _licenseToken, config, sourceVideoFile);
+      dynamic exportResult = await _veSdkFlutterPlugin.openPipScreen(licenseToken, config, sourceVideoFile);
       _handleExportResult(exportResult);
     } on PlatformException catch (e) {
       _handlePlatformException(e);
@@ -97,13 +103,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _startVideoEditorInTrimmerMode() async {
-
     // Specify your Config params in the builder below
 
     final config = FeaturesConfigBuilder()
-      // .setDraftConfig(...)
-      //...
-      .build();
+        // .setDraftConfig(...)
+        //...
+        .build();
     final ImagePicker picker = ImagePicker();
     final videoFiles = await picker.pickMultipleMedia(imageQuality: 3);
 
@@ -115,8 +120,7 @@ class _HomePageState extends State<HomePage> {
     final sources = videoFiles.map((f) => f.path).toList();
 
     try {
-      dynamic exportResult = await _veSdkFlutterPlugin.openTrimmerScreen(
-          _licenseToken, config, sources);
+      dynamic exportResult = await _veSdkFlutterPlugin.openTrimmerScreen(licenseToken, config, sources);
       _handleExportResult(exportResult);
     } on PlatformException catch (e) {
       _handlePlatformException(e);
@@ -132,11 +136,15 @@ class _HomePageState extends State<HomePage> {
     // The list of exported video file paths
     debugPrint('Exported video files = ${result.videoSources}');
 
+    debugPrint('Exported draftSequence = ${result.draftSequence}');
+
     // Preview as a image file taken by the user. Null - when preview screen is disabled.
     debugPrint('Exported preview file = ${result.previewFilePath}');
 
     // Meta file where you can find short data used in exported video
     debugPrint('Exported meta file = ${result.metaFilePath}');
+
+    debugPrint('Exported music file = ${result.audioMeta?.firstOrNull?.title}');
   }
 
   void _handlePlatformException(PlatformException exception) {
@@ -255,4 +263,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-

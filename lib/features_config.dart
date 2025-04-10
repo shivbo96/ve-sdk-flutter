@@ -28,13 +28,12 @@ class FeaturesConfigBuilder {
   AiCaptions? _aiCaptions;
   AudioBrowser _audioBrowser =
       AudioBrowser.fromSource(AudioBrowserSource.local);
-  EditorConfig _editorConfig =
-      EditorConfig(enableVideoAspectFill: true);
+  EditorConfig _editorConfig = const EditorConfig(enableVideoAspectFill: true, enableVideoCover: true);
   DraftsConfig _draftsConfig =
       DraftsConfig.fromOption(DraftsOption.askToSave);
   GifPickerConfig? _gifPickerConfig;
-  bool _enableEditorV2 = false;
-  VideoDurationConfig _videoDurationConfig = VideoDurationConfig();
+  bool _enableEditorV2 = true;
+  VideoDurationConfig _videoDurationConfig = const VideoDurationConfig();
   bool _processPictureExternally = false;
 
   FeaturesConfigBuilder setAiClipping(aiClipping) {
@@ -129,10 +128,10 @@ class AiCaptions {
 @immutable
 class EditorConfig {
   final bool? enableVideoAspectFill;
+  final bool? enableVideoCover;
+  final String? saveButtonText;
 
-  const EditorConfig({
-        this.enableVideoAspectFill
-  });
+  const EditorConfig({this.enableVideoAspectFill = true, this.enableVideoCover = true, this.saveButtonText = 'Next'});
 }
 
 enum DraftsOption { askToSave, closeOnSave, auto, disabled }
@@ -166,6 +165,6 @@ class VideoDurationConfig {
 
   const VideoDurationConfig({
     this.maxTotalVideoDuration = 120.0,
-    this.videoDurations = const [60.0, 30.0, 15.0]
+    this.videoDurations = const [120,60.0, 30.0, 15.0]
   });
 }

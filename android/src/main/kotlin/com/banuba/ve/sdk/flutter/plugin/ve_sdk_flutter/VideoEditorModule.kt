@@ -54,13 +54,17 @@ import java.io.IOException
 import java.util.Date
 
 class VideoEditorModule {
-    internal fun initialize(application: Application, featuresConfig: FeaturesConfig, exportData: ExportData?) {
+    internal fun initialize(
+        application: Application,
+        featuresConfig: FeaturesConfig,
+        exportData: ExportData?
+    ) {
         startKoin {
             androidContext(application)
             allowOverride(true)
 
             // IMPORTANT! order of modules is required
-            val modulesList = mutableListOf (
+            val modulesList = mutableListOf(
                 VeSdkKoinModule().module,
                 VeExportKoinModule().module,
                 VePlaybackSdkKoinModule().module,
@@ -75,9 +79,10 @@ class VideoEditorModule {
             if (BuildConfig.ENABLE_FACE_AR) {
                 Log.d(TAG, "Effect Player is added")
                 try {
-                    val effectPlayerInstance = Class.forName("com.banuba.sdk.effectplayer.adapter.BanubaEffectPlayerKoinModule")
-                        .getDeclaredConstructor()
-                        .newInstance()
+                    val effectPlayerInstance =
+                        Class.forName("com.banuba.sdk.effectplayer.adapter.BanubaEffectPlayerKoinModule")
+                            .getDeclaredConstructor()
+                            .newInstance()
                     val module = effectPlayerInstance.javaClass.getDeclaredField("module")
                         .apply {
                             isAccessible = true
@@ -118,7 +123,10 @@ class VideoEditorModule {
  * Some dependencies has no default implementations. It means that
  * these classes fully depends on your requirements
  */
-private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig, exportData: ExportData?) {
+private class SampleIntegrationVeKoinModule(
+    featuresConfig: FeaturesConfig,
+    exportData: ExportData?
+) {
 
     val module = module {
         single<ArEffectsRepositoryProvider>(createdAtStart = true) {
@@ -143,9 +151,11 @@ private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig, expo
             featuresConfig.audioBrowser.value()
         }
 
-        when (featuresConfig.audioBrowser.source){
+        when (featuresConfig.audioBrowser.source) {
             FEATURES_CONFIG_AUDIO_BROWSER_SOURCE_MUBERT -> this.addMubertParams(featuresConfig)
-            FEATURES_CONFIG_AUDIO_BROWSER_SOURCE_DISABLED -> this.applyDisabledMusicConfig(featuresConfig)
+            FEATURES_CONFIG_AUDIO_BROWSER_SOURCE_DISABLED -> this.applyDisabledMusicConfig(
+                featuresConfig
+            )
         }
 
         if (featuresConfig.audioBrowser.source == FEATURES_CONFIG_AUDIO_BROWSER_SOURCE_MUBERT) {
@@ -173,6 +183,7 @@ private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig, expo
                             contentProvider = get()
                         )
                     }
+
                     else -> {
                         AiClippingSoundstripeTrackLoader(
                             soundstripeApi = get()
@@ -208,9 +219,11 @@ private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig, expo
             )
         }
 
-        single <EditorConfig>{
+        single<EditorConfig> {
             EditorConfig(
                 maxTotalVideoDurationMs = featuresConfig.videoDurationConfig.maxTotalVideoDuration,
+                slideShowSourceVideoDurationMs = 4000,
+                minTotalVideoDurationMs = 4000
             )
         }
 
@@ -220,7 +233,7 @@ private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig, expo
             )
         }
 
-        if (featuresConfig.processPictureExternally){
+        if (featuresConfig.processPictureExternally) {
             this.single<MediaNavigationProcessor> {
                 object : MediaNavigationProcessor {
                     override fun process(activity: Activity, mediaList: List<Uri>): Boolean {
@@ -288,7 +301,7 @@ private class SampleIntegrationVeKoinModule(featuresConfig: FeaturesConfig, expo
     }
 
     private fun Module.applyDisabledMusicConfig(featuresConfig: FeaturesConfig) {
-        this.single<MusicEditorConfig>{
+        this.single<MusicEditorConfig> {
             MusicEditorConfig(supportsExternalMusic = false)
         }
     }

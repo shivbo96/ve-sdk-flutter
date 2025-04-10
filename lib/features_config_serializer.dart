@@ -48,9 +48,7 @@ extension AudioBrowserSerializer on AudioBrowser {
 
 extension EditorConfigSerializer on EditorConfig {
   Map<String, dynamic> _serialize() {
-    return {
-      'enableVideoAspectFill': enableVideoAspectFill
-    };
+    return {'enableVideoAspectFill': enableVideoAspectFill,'enableVideoCover': enableVideoCover,'saveButtonText': saveButtonText};
   }
 }
 

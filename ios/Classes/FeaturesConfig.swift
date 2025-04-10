@@ -50,11 +50,13 @@ struct Params: Codable {
 
 struct EditorConfig: Codable {
     let enableVideoAspectFill: Bool
+    let enableVideoCover: Bool
+    let saveButtonText: String
 }
 
 struct DraftsConfig: Codable {
     let option: String
-    
+
     public func value() -> DraftsFeatureConfig {
         switch option {
             case VideoEditorConfig.featuresConfigDraftConfigOptionAuto:
@@ -81,11 +83,11 @@ struct VideoDurationConfig: Codable {
         return VideoEditorDurationConfig(
             maximumVideoDuration: maxTotalVideoDuration,
             videoDurations: videoDurations,
-            minimumDurationFromCamera: 3.0,
-            minimumDurationFromGallery: 0.3,
-            minimumVideoDuration: 1.0,
-            minimumTrimmedPartDuration: 0.3,
-            slideshowDuration: 3.0
+            minimumDurationFromCamera: 4.0,
+            minimumDurationFromGallery: 0.4,
+            minimumVideoDuration: 4.0,
+            minimumTrimmedPartDuration: 0.4,
+            slideshowDuration: 4.0
         )
     }
 }

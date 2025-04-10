@@ -23,16 +23,21 @@ extension VeSdkFlutterPlugin {
     static let inputParamExportData = "exportData"
     static let inputParamScreen = "screen"
     static let inputParamVideoSources = "videoSources"
+    static let inputParamDraftSequenceId = "draftSequenceId"
     
     static let screenCamera = "camera"
     static let screenPip = "pip"
     static let screenTrimmer = "trimmer"
     static let screenAiClipping = "aiClipping"
+    static let getAllDraft = "getAllDraft"
+    static let removeDraft = "removeDraft"
+    static let editor = "editor"
 
     static let argExportedVideoSources = "exportedVideoSources"
     static let argExportedPreview = "exportedPreview"
     static let argExportedMeta = "exportedMeta"
     static let argExportedAudioMeta = "exportedAudioMeta"
+    static let draftVideoSequence = "draftVideoSequence"
 
     static let errMessageSdkNotInitialized = """
         Failed to initialize SDK!!!
@@ -72,7 +77,7 @@ extension VeSdkFlutterPlugin {
                 params: nil
             ),
             editorConfig: EditorConfig(
-                enableVideoAspectFill: true
+                enableVideoAspectFill: true,enableVideoCover: true,saveButtonText: "Next"
             ),
             draftsConfig: DraftsConfig(
                 option: "enable"
@@ -119,6 +124,7 @@ extension VideoEditorConfig {
     
     //Editor Configs
     static let featuresConfigEnableVideoAspectFill = "enableVideoAspectFill"
+    static let featuresConfigEnableVideoCover = "enableVideoCover"
 
     // Unknown params
     static let featuresConfigUnknownParams = "Undefined"

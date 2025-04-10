@@ -19,6 +19,13 @@ protocol VideoEditor {
     func openVideoEditorPIP(fromViewController controller: FlutterViewController, videoURL: URL, flutterResult: @escaping FlutterResult)
     
     func openVideoEditorTrimmer(fromViewController controller: FlutterViewController, videoSources: Array<URL>, flutterResult: @escaping FlutterResult)
+
+    func getAllDraftsList(flutterResult: @escaping FlutterResult)
+
+    func removeDraftFromList(draftSequenceId:String,flutterResult: @escaping FlutterResult)
+
+    func openEditor(draftSequenceId:String,fromViewController controller: FlutterViewController,flutterResult: @escaping FlutterResult)
+
 }
 
 class VideoEditorModule: VideoEditor {
@@ -90,6 +97,240 @@ class VideoEditorModule: VideoEditor {
         )
         checkLicenseAndStartVideoEditor(with: config, flutterResult: flutterResult)
     }
+    
+    func getAllDraftsList(
+        flutterResult: @escaping FlutterResult
+    ) {
+        self.flutterResult = flutterResult
+        checkLicenseAndGetAllDraftList( flutterResult: flutterResult)
+    }
+    
+    
+    func removeDraftFromList(
+        draftSequenceId:String,
+        flutterResult: @escaping FlutterResult
+    ) {
+        self.flutterResult = flutterResult
+        checkLicenseAndRemoveDraftFromList(draftSequenceId: draftSequenceId, flutterResult: flutterResult)
+    }
+    
+    func openEditor(
+            draftSequenceId:String,
+            fromViewController controller: FlutterViewController,
+            flutterResult: @escaping FlutterResult
+        ) {
+            self.flutterResult = flutterResult
+            checkLicenseAndOpenEditor(draftSequenceId: draftSequenceId,fromViewController: controller,flutterResult: flutterResult)
+        }
+    
+    func checkLicenseAndOpenEditor( draftSequenceId:String,fromViewController controller: FlutterViewController,flutterResult: @escaping FlutterResult) {
+           if videoEditorSDK == nil {
+               flutterResult(FlutterError(code: VeSdkFlutterPlugin.errSdkNotInitialized, message: VeSdkFlutterPlugin.errMessageSdkNotInitialized, details: nil))
+               return
+           }
+           
+           // Checking the license might take around 1 sec in the worst case.
+           // Please optimize use if this method in your application for the best user experience
+           videoEditorSDK?.getLicenseState(completion: { [weak self] isValid in
+               guard let self = self else { return }
+               
+               if isValid {
+                   print("✅ The license is active")
+                   DispatchQueue.main.async {
+                       guard let drafts = self.videoEditorSDK?.draftsService.getDrafts() else {
+                           print("No drafts available")
+                           self.flutterResult?([])
+                           return
+                       }
+
+                       print("drafts length \(drafts.count)")
+
+                       // Find the draft that matches the sequenceId
+                       guard let draftData = drafts.first(where: { $0.sequenceId == draftSequenceId }) else {
+                           print("No draft found with the given sequenceId: \(draftSequenceId)")
+                           self.flutterResult?(nil)
+                           return
+                       }
+
+                       // Open Video Editor with the preselected draft
+                       let draftedConfig = VideoEditorLaunchConfig.DraftedLaunchConfig(
+                           externalDraft: draftData,
+                           draftsConfig: .enabled
+                       )
+
+                       let config = VideoEditorLaunchConfig(
+                           entryPoint: .editor,
+                           hostController: controller,
+                           draftedLaunchConfig: draftedConfig,
+                           animated: true
+                       )
+
+                       self.videoEditorSDK?.presentVideoEditor(
+                           withLaunchConfiguration: config,
+                           completion: nil
+                       )
+                   }
+               } else {
+                   if self.restoreLastVideoEditingSession == false {
+                       self.videoEditorSDK?.clearSessionData()
+                   }
+                   self.videoEditorSDK = nil
+                   print("❌ Use of SDK is restricted: the license is revoked or expired")
+                   self.flutterResult?(FlutterError(
+                       code: VeSdkFlutterPlugin.errLicenseRevoked,
+                       message: VeSdkFlutterPlugin.errMessageLicenseRevoked,
+                       details: nil
+                   ))
+               }
+           })
+
+       }
+    
+        
+
+    
+    func checkLicenseAndRemoveDraftFromList(draftSequenceId:String, flutterResult: @escaping FlutterResult) {
+           if videoEditorSDK == nil {
+               flutterResult(FlutterError(code: VeSdkFlutterPlugin.errSdkNotInitialized, message: VeSdkFlutterPlugin.errMessageSdkNotInitialized, details: nil))
+               return
+           }
+           
+           // Checking the license might take around 1 sec in the worst case.
+           // Please optimize use if this method in your application for the best user experience
+           videoEditorSDK?.getLicenseState(completion: { [weak self] isValid in
+               guard let self else { return }
+               if isValid {
+                   print("✅ The license is active")
+                   
+                   DispatchQueue.main.async {
+                       guard let drafts = self.videoEditorSDK?.draftsService.getDrafts() else {
+                           print("No drafts available")
+                           self.flutterResult?([])
+                           return
+                       }
+
+                       // Find the draft that matches the sequenceId
+                       guard let draftData = drafts.first(where: { $0.sequenceId == draftSequenceId }) else {
+                           print("No draft found with the given sequenceId: \(draftSequenceId)")
+                           self.flutterResult?(nil)
+                           return
+                       }
+                       let isDeleted = self.videoEditorSDK?.draftsService.removeExternalDraft(draftData)
+                      
+               
+                       print("isDeleted \(isDeleted ?? false)")
+                       self.flutterResult?(isDeleted ?? false)
+
+                      
+                   }
+                   
+                  
+
+               } else {
+                   if self.restoreLastVideoEditingSession == false {
+                       self.videoEditorSDK?.clearSessionData()
+                   }
+                   self.videoEditorSDK = nil
+                   print("❌ Use of SDK is restricted: the license is revoked or expired")
+                   flutterResult(FlutterError(code: VeSdkFlutterPlugin.errLicenseRevoked, message: VeSdkFlutterPlugin.errMessageLicenseRevoked, details: nil))
+               }
+           })
+       }
+       
+
+    
+    func checkLicenseAndGetAllDraftList( flutterResult: @escaping FlutterResult) {
+        if videoEditorSDK == nil {
+            flutterResult(FlutterError(code: VeSdkFlutterPlugin.errSdkNotInitialized, message: VeSdkFlutterPlugin.errMessageSdkNotInitialized, details: nil))
+            return
+        }
+        
+        // Checking the license might take around 1 sec in the worst case.
+        // Please optimize use if this method in your application for the best user experience
+        videoEditorSDK?.getLicenseState(completion: { [weak self] isValid in
+            guard let self else { return }
+            if isValid {
+                print("✅ The license is active")
+                DispatchQueue.main.async {
+                    guard let drafts = self.videoEditorSDK?.draftsService.getDrafts() else {
+                        print("No drafts available")
+                        self.flutterResult?([])
+                        return
+                    }
+
+                    let dispatchGroup = DispatchGroup() // Create a DispatchGroup
+                    var draftPreviewImage: [String] = []
+
+                    print("drafts length \(drafts.count)")
+
+                    drafts.forEach { draft in
+                        dispatchGroup.enter() // Enter the group before starting async work
+
+                        self.videoEditorSDK?.draftsService.getPreviewForVideoSequence(
+                            draft,
+                            thumbnailHeight: 200,
+                            completion: { preview in
+                                defer { dispatchGroup.leave() } // Leave the group after async work finishes
+                                
+                                if let cgImage = preview?.cgImage {
+                                    if let filePath = self.saveCGImageToFile(cgImage) {
+                                        print("Image file path: \(filePath)")
+                                        draftPreviewImage.append(filePath)
+                                    } else {
+                                        print("Failed to save image.")
+                                    }
+                                }
+                            }
+                        )
+                    }
+
+                    // Wait for all async tasks to complete
+                    dispatchGroup.notify(queue: .main) {
+                        print("All previews processed: \(draftPreviewImage)")
+                        self.flutterResult?(draftPreviewImage) // Return the final result
+                    }
+                }
+
+            } else {
+                if self.restoreLastVideoEditingSession == false {
+                    self.videoEditorSDK?.clearSessionData()
+                }
+                self.videoEditorSDK = nil
+                print("❌ Use of SDK is restricted: the license is revoked or expired")
+                flutterResult(FlutterError(code: VeSdkFlutterPlugin.errLicenseRevoked, message: VeSdkFlutterPlugin.errMessageLicenseRevoked, details: nil))
+            }
+        })
+    }
+
+    
+    func saveCGImageToFile(_ cgImage: CGImage) -> String? {
+        // Create a UIImage from the CGImage
+        let uiImage = UIImage(cgImage: cgImage)
+        
+        // Convert the UIImage to PNG data
+        guard let pngData = uiImage.pngData() else {
+            print("Failed to convert CGImage to PNG data")
+            return nil
+        }
+        
+        // Generate a file name using the hash of the pngData
+        let fileName = "\(pngData.hashValue).png"
+        
+        // Create a URL for the temporary directory
+        let tempDirectory = FileManager.default.temporaryDirectory
+        let fileURL = tempDirectory.appendingPathComponent(fileName)
+        
+        do {
+            // Write the PNG data to the file
+            try pngData.write(to: fileURL)
+            print("Image successfully saved at: \(fileURL.path)")
+            return fileURL.path
+        } catch {
+            print("Failed to save image: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
     
     func openVideoEditorPIP(
         fromViewController controller: FlutterViewController,
@@ -172,12 +413,14 @@ class VideoEditorModule: VideoEditor {
             }
         })
     }
+    
+    
 }
 
 
 // MARK: - Export flow
 extension VideoEditorModule {
-    func exportVideo() {
+    func exportVideo(draft: BanubaVideoEditorSDK.ExternalDraft?) {
         
         guard let exportData, let currentController else {
             print("❌ Export Config is not set")
@@ -233,7 +476,8 @@ extension VideoEditorModule {
                         audioMetaJSON: audioMetaJSON,
                         previewUrl: FileManager.default.temporaryDirectory.appendingPathComponent("export_preview.png"),
                         error: error,
-                        previewImage: coverImage?.coverImage
+                        previewImage: coverImage?.coverImage,
+                        draft: draft
                     )
                 }
             }
@@ -246,13 +490,14 @@ extension VideoEditorModule {
         audioMetaJSON: String?,
         previewUrl: URL,
         error: Error?,
-        previewImage: UIImage?
+        previewImage: UIImage?,
+        draft: BanubaVideoEditorSDK.ExternalDraft?
     ) {
         videoEditorSDK?.dismissVideoEditor(animated: true) {
             let success = error == nil
             if success {
                 print(
-                    "Video exported successfully: video sources = \(videoUrls)), meta = \(String(describing: metaUrl))), audio metadata = \(String(describing: audioMetaJSON)) preview = \(previewUrl))"
+                    "Video exported successfully: video sources = \(videoUrls)), meta = \(String(describing: metaUrl))), audio metadata = \(String(describing: audioMetaJSON)) preview = \(previewUrl) draft = \(draft?.sequenceId ?? "nil"))"
                 )
                 
                 let previewImageData = previewImage?.pngData()
@@ -264,6 +509,7 @@ extension VideoEditorModule {
                     VeSdkFlutterPlugin.argExportedVideoSources: videoUrls.compactMap { $0.path },
                     VeSdkFlutterPlugin.argExportedPreview: previewUrl.path,
                     VeSdkFlutterPlugin.argExportedMeta: metaUrl?.path,
+                    VeSdkFlutterPlugin.draftVideoSequence: draft?.sequenceId,
                     VeSdkFlutterPlugin.argExportedAudioMeta: audioMetaJSON
                 ]
                 self.flutterResult?(data)
@@ -316,11 +562,20 @@ extension VideoEditorModule: BanubaVideoEditorDelegate {
         }
     }
     
-    func videoEditorDone(_ videoEditor: BanubaVideoEditor) {
-        exportVideo()
-    }
+    func videoEditorDone(_ videoEditor: BanubaVideoEditorSDK.BanubaVideoEditor) {
+           print("videoEditor: \(videoEditor.draftActionType.isSaveOrUpdate)")
+           if(videoEditor.draftActionType.isSaveOrUpdate == false){
+               exportVideo(draft: nil)
+           }
+          
+       }
+//    
+    func videoEditor(_ videoEditor: BanubaVideoEditor, didSaveDraft draft: BanubaVideoEditorSDK.ExternalDraft) {
+           exportVideo(draft: draft)
+       }
+    
 
-    func videoEditor(_ videoEditor: BanubaVideoEditor, shouldProcessMediaUrls urls: [URL]) -> Bool {
+    func videoEditors(_ videoEditor: BanubaVideoEditor, didSaveDraft draft: BanubaVideoEditorSDK.ExternalDraft,shouldProcessMediaUrls urls: [URL]) -> Bool {
         guard let featuresConfig else {
             return true
         }
@@ -347,7 +602,9 @@ extension VideoEditorModule: BanubaVideoEditorDelegate {
                         audioMetaJSON: nil,
                         previewUrl: FileManager.default.temporaryDirectory.appendingPathComponent("\(dateFormatter.string(from: Date())).png"),
                         error: nil,
-                        previewImage: resultImage
+                        previewImage: resultImage,
+                        draft: draft
+                        
                     )
                 }
             }
@@ -406,6 +663,28 @@ extension VideoEditorConfig {
 
         self.videoDurationConfiguration = featuresConfig.videoDurationConfig.value()
 
+        self.featureConfiguration.isVideoCoverSelectionEnabled = featuresConfig.editorConfig.enableVideoCover
+        self.featureConfiguration.isAspectsEnabled = false
+        self.featureConfiguration.isDraftSavedToastEnabled = false
+        self.videoEditorViewConfiguration.primaryAspectRatio = .aspect9x16
+
+
+        self.recorderConfiguration.previewScalingMode = .aspectFill
+        self.editorConfiguration.saveButton = BanubaButtonConfiguration(
+                  title: TextButtonConfiguration(
+                    style: BanubaUtilities.TextConfiguration(
+                      font: UIFont.systemFont(ofSize: 16.0), // Set the font size or use another UIFont method
+                      color: UIColor.black // Set the color, replace with the desired UIColor
+                    ),
+                    text: featuresConfig.editorConfig.saveButtonText
+                  ),
+                  width:70,
+                  height:35,
+                  background: BanubaUtilities.BackgroundConfiguration(
+                    cornerRadius: 18.0 ,// Set the corner radius for the button
+                    color: UIColor.white // Set the background color, replace with the desired UIColor
+                  )
+                );
         // Make customization here
         
         AudioBrowserConfig.shared.setPrimaryColor(#colorLiteral(red: 0.2350233793, green: 0.7372031212, blue: 0.7565478683, alpha: 1))

@@ -17,12 +17,15 @@ internal const val INPUT_PARAM_FEATURES_CONFIG = "featuresConfig"
 internal const val INPUT_PARAM_EXPORT_DATA = "exportData"
 internal const val INPUT_PARAM_SCREEN = "screen"
 internal const val INPUT_PARAM_VIDEO_SOURCES = "videoSources"
+internal const val INPUT_PARAM_DRAFT_VIDEO_SEQUENCE = "draftSequenceId"
+
 
 // Exported params
 internal const val EXPORTED_VIDEO_SOURCES = "exportedVideoSources"
 internal const val EXPORTED_PREVIEW = "exportedPreview"
 internal const val EXPORTED_META = "exportedMeta"
 internal const val EXPORTED_AUDIO_META = "exportedAudioMeta"
+internal const val DRAFT_VIDEO_SEQUENCE = "draftVideoSequence"
 
 // Features config params
 internal const val FEATURES_CONFIG_AI_CAPTIONS = "aiCaptions"
@@ -49,6 +52,7 @@ internal const val FEATURES_CONFIG_AUDIO_BROWSER_PARAMS_MUBERT_TOKEN = "mubertTo
 
 internal const val FEATURES_CONFIG_EDITOR_CONFIG = "editorConfig"
 internal const val FEATURES_CONFIG_EDITOR_CONFIG_ENABLE_VIDEO_ASPECT_FILL = "enableVideoAspectFill"
+internal const val FEATURES_CONFIG_EDITOR_CONFIG_ENABLE_VIDEO_COVER = "enableVideoCover"
 
 internal const val FEATURES_CONFIG_DRAFTS_CONFIG = "draftsConfig"
 internal const val FEATURES_CONFIG_DRAFTS_CONFIG_OPTION = "option"
@@ -103,6 +107,9 @@ internal const val SCREEN_CAMERA = "camera"
 internal const val SCREEN_PIP = "pip"
 internal const val SCREEN_TRIMMER = "trimmer"
 internal const val SCREEN_AICLIPPING = "aiClipping"
+internal const val SCREEN_GET_ALL_DRAFT = "getAllDraft"
+internal const val SCREEN_REMOVE_DRAFT = "removeDraft"
+internal const val SCREEN_EDITOR = "editor"
 
 // Errors
 internal const val ERR_CODE_SDK_NOT_INITIALIZED = "ERR_SDK_NOT_INITIALIZED"
