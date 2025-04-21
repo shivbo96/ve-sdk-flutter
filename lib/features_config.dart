@@ -164,7 +164,7 @@ class VideoDurationConfig {
   final List<double>? videoDurations;
 
   const VideoDurationConfig({
-    this.maxTotalVideoDuration = 120.0,
-    this.videoDurations = const [120,60.0, 30.0, 15.0]
+    this.maxTotalVideoDuration = 30.0,
+    this.videoDurations = const [30.0, 15.0]
   });
 }
