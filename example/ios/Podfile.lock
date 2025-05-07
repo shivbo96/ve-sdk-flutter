@@ -1,70 +1,70 @@
 PODS:
-  - BanubaARCloudSDK (1.41.0):
-    - BanubaUtilities (= 1.41.0)
-  - BanubaAudioBrowserSDK (1.41.0):
-    - BanubaUtilities (= 1.41.0)
-  - BanubaLicenseServicingSDK (1.41.0):
-    - BNBLicenseUtils (= 1.41.0)
-  - BanubaSDK (1.41.0):
-    - BNBBackground (~> 1.16.0)
-    - BNBEffectPlayer (~> 1.16.0)
-    - BNBEyes (~> 1.16.0)
-    - BNBHair (~> 1.16.0)
-    - BNBLips (~> 1.16.0)
-    - BNBScripting (~> 1.16.0)
-    - BNBSdkApi (~> 1.16.0)
-    - BNBSdkCore (~> 1.16.0)
-    - BNBSkin (~> 1.16.0)
-  - BanubaSDKSimple (1.41.0)
-  - BanubaUtilities (1.41.0)
-  - BanubaVideoEditorCore (1.41.0):
-    - BanubaLicenseServicingSDK (= 1.41.0)
-    - BanubaUtilities (= 1.41.0)
-  - BanubaVideoEditorSDK (1.41.0):
-    - BanubaLicenseServicingSDK (= 1.41.0)
-    - BanubaUtilities (= 1.41.0)
-    - BanubaVideoEditorCore (= 1.41.0)
-  - BNBBackground (1.16.4):
-    - BNBEffectPlayer (= 1.16.4)
-    - BNBScripting (= 1.16.4)
-    - BNBSdkCore (= 1.16.4)
-  - BNBEffectPlayer (1.16.4)
-  - BNBEyes (1.16.4):
-    - BNBEffectPlayer (= 1.16.4)
-    - BNBFaceTracker (= 1.16.4)
-    - BNBScripting (= 1.16.4)
-    - BNBSdkCore (= 1.16.4)
-  - BNBFaceTracker (1.16.4):
-    - BNBEffectPlayer (= 1.16.4)
-    - BNBScripting (= 1.16.4)
-    - BNBSdkCore (= 1.16.4)
-  - BNBHair (1.16.4):
-    - BNBEffectPlayer (= 1.16.4)
-    - BNBScripting (= 1.16.4)
-    - BNBSdkCore (= 1.16.4)
-  - BNBLicenseUtils (1.41.0)
-  - BNBLips (1.16.4):
-    - BNBEffectPlayer (= 1.16.4)
-    - BNBFaceTracker (= 1.16.4)
-    - BNBScripting (= 1.16.4)
-    - BNBSdkCore (= 1.16.4)
-  - BNBScripting (1.16.4)
-  - BNBSdkApi (1.16.4):
-    - BNBSdkCore (= 1.16.4)
-  - BNBSdkCore (1.16.4)
-  - BNBSkin (1.16.4):
-    - BNBEffectPlayer (= 1.16.4)
-    - BNBScripting (= 1.16.4)
-    - BNBSdkCore (= 1.16.4)
+  - BanubaARCloudSDK (1.42.1):
+    - BanubaUtilities (= 1.42.1)
+  - BanubaAudioBrowserSDK (1.42.1):
+    - BanubaUtilities (= 1.42.1)
+  - BanubaLicenseServicingSDK (1.42.1):
+    - BNBLicenseUtils (= 1.42.1)
+  - BanubaSDK (1.42.1):
+    - BNBBackground (~> 1.17.0)
+    - BNBEffectPlayer (~> 1.17.0)
+    - BNBEyes (~> 1.17.0)
+    - BNBHair (~> 1.17.0)
+    - BNBLips (~> 1.17.0)
+    - BNBScripting (~> 1.17.0)
+    - BNBSdkApi (~> 1.17.0)
+    - BNBSdkCore (~> 1.17.0)
+    - BNBSkin (~> 1.17.0)
+  - BanubaSDKSimple (1.42.1)
+  - BanubaUtilities (1.42.1)
+  - BanubaVideoEditorCore (1.42.1):
+    - BanubaLicenseServicingSDK (= 1.42.1)
+    - BanubaUtilities (= 1.42.1)
+  - BanubaVideoEditorSDK (1.42.1):
+    - BanubaLicenseServicingSDK (= 1.42.1)
+    - BanubaUtilities (= 1.42.1)
+    - BanubaVideoEditorCore (= 1.42.1)
+  - BNBBackground (1.17.1):
+    - BNBEffectPlayer (= 1.17.1)
+    - BNBScripting (= 1.17.1)
+    - BNBSdkCore (= 1.17.1)
+  - BNBEffectPlayer (1.17.1)
+  - BNBEyes (1.17.1):
+    - BNBEffectPlayer (= 1.17.1)
+    - BNBFaceTracker (= 1.17.1)
+    - BNBScripting (= 1.17.1)
+    - BNBSdkCore (= 1.17.1)
+  - BNBFaceTracker (1.17.1):
+    - BNBEffectPlayer (= 1.17.1)
+    - BNBScripting (= 1.17.1)
+    - BNBSdkCore (= 1.17.1)
+  - BNBHair (1.17.1):
+    - BNBEffectPlayer (= 1.17.1)
+    - BNBScripting (= 1.17.1)
+    - BNBSdkCore (= 1.17.1)
+  - BNBLicenseUtils (1.42.1)
+  - BNBLips (1.17.1):
+    - BNBEffectPlayer (= 1.17.1)
+    - BNBFaceTracker (= 1.17.1)
+    - BNBScripting (= 1.17.1)
+    - BNBSdkCore (= 1.17.1)
+  - BNBScripting (1.17.1)
+  - BNBSdkApi (1.17.1):
+    - BNBSdkCore (= 1.17.1)
+  - BNBSdkCore (1.17.1)
+  - BNBSkin (1.17.1):
+    - BNBEffectPlayer (= 1.17.1)
+    - BNBScripting (= 1.17.1)
+    - BNBSdkCore (= 1.17.1)
   - Flutter (1.0.0)
   - image_picker_ios (0.0.1):
     - Flutter
   - ve_sdk_flutter (0.16.0):
-    - BanubaARCloudSDK (= 1.41.0)
-    - BanubaAudioBrowserSDK (= 1.41.0)
-    - BanubaSDK (= 1.41.0)
-    - BanubaSDKSimple (= 1.41.0)
-    - BanubaVideoEditorSDK (= 1.41.0)
+    - BanubaARCloudSDK (= 1.42.1)
+    - BanubaAudioBrowserSDK (= 1.42.1)
+    - BanubaSDK (= 1.42.1)
+    - BanubaSDKSimple (= 1.42.1)
+    - BanubaVideoEditorSDK (= 1.42.1)
     - Flutter
 
 DEPENDENCIES:
@@ -104,28 +104,28 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/ve_sdk_flutter/ios"
 
 SPEC CHECKSUMS:
-  BanubaARCloudSDK: 6fde0a51dba042b5d5e106bb95d96071fbba06a7
-  BanubaAudioBrowserSDK: 3779d8978d21a6c0eaf3f44d51a1a4dce1538f1f
-  BanubaLicenseServicingSDK: 239e70f12be9249c21bb1963ba5dd7d4798400e7
-  BanubaSDK: 52e331f77579c7ba877b530667c6f1d5d1adf30c
-  BanubaSDKSimple: 2e8f8f11aab3340148033ead1aef78935987adf1
-  BanubaUtilities: 4b7464391e107913446eff631cc673b45f8389d6
-  BanubaVideoEditorCore: 9c2dc8e91a158954a51de193622cd8c7b8bde60e
-  BanubaVideoEditorSDK: b32fc5726e5e14412deacbf7aae6ee6c6c6f1fb7
-  BNBBackground: cdbc07dc698d2d094cc676e0e77845e219d9e2ba
-  BNBEffectPlayer: d5813b05afce282f0959e31fda877a06dbed1bce
-  BNBEyes: be819e28d00a26973cdaa59f5c5be32e183ba272
-  BNBFaceTracker: 94cc4c1b1868bf6dfcb093bd40db94c36b119745
-  BNBHair: a7b3d3116853bf628db67b00491e95cc22b17f04
-  BNBLicenseUtils: 119e6bc725552c0ae1c80fd8c037f5245a09ea19
-  BNBLips: ecbe48023ef3652dce83e165a50884de7baecd26
-  BNBScripting: 3e851d230e201e06bf94b0f75a561c18cc15877c
-  BNBSdkApi: a05a2201214e3e7f8920f645fbb98d5b8df4fe19
-  BNBSdkCore: 90da0c0c1fe1f10377d4ab1e00aa701926faea17
-  BNBSkin: 1f6ff9507b1e35af1469e4fc91270154149ab673
+  BanubaARCloudSDK: a1a79c474fdd43c0b575a463bee84d6b91e85d74
+  BanubaAudioBrowserSDK: 8bc7741ec032ac8132a6bd867f197a8864fbe2ab
+  BanubaLicenseServicingSDK: 59d9924fa9e705c54cd28df3bae9a7aab815c2ed
+  BanubaSDK: 63a156aec1227189ef49f7d8e81d4f4e3aaf212a
+  BanubaSDKSimple: ba14144179247fb1d7f4d23195b2dd567e595b2d
+  BanubaUtilities: 4fd7d0c6fd6d6eb456b5f36725038df08845eb8f
+  BanubaVideoEditorCore: 9ff6737422d2a4944acb29b20be99084c230333f
+  BanubaVideoEditorSDK: 205b17f9ebe4d39131813632b66ea52afdd43b5b
+  BNBBackground: e6fb8e5a364bdba5157b0f150abd6eb938e2f7e6
+  BNBEffectPlayer: 3badeeeb5ea52177766962001d22a5d9b362f662
+  BNBEyes: ff7448086ab766457a4dcfefcd83aeeb067abc40
+  BNBFaceTracker: 0d432b3c4437ca17760e11231e269ca24ca0c5d1
+  BNBHair: d3823248c1aca4a672f1bfe26261c8d03b24ef4a
+  BNBLicenseUtils: 85dae3e0ca7328eaabd860c401d71868b4d2a225
+  BNBLips: 56cdc7e23e344fb28c6417624b9d6f378a7466f6
+  BNBScripting: d5407811155575ba2998638573277f4553671f3c
+  BNBSdkApi: 259d366a1ec48c452115da1048efd342ff67f809
+  BNBSdkCore: a86f745456a97ac5507c2331ebf9472a9a2ec2d0
+  BNBSkin: 9620b357518cd74c1be7a309db107785b3857882
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   image_picker_ios: 7fe1ff8e34c1790d6fff70a32484959f563a928a
-  ve_sdk_flutter: 9d5876888e493c36c012be4e255a00e8f0ff0fc6
+  ve_sdk_flutter: c47fb7d1db6b59725da6bcc547cee72260ff07fa
 
 PODFILE CHECKSUM: 73d8a17446cd2f1c034d597d281fbd949e555c7b
 

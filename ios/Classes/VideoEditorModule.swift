@@ -669,7 +669,7 @@ extension VideoEditorConfig {
         self.videoEditorViewConfiguration.primaryAspectRatio = .aspect9x16
 
 
-        self.recorderConfiguration.previewScalingMode = .aspectFill
+        self.recorderConfiguration.previewScalingMode = .aspectFit
         self.editorConfiguration.saveButton = BanubaButtonConfiguration(
                   title: TextButtonConfiguration(
                     style: BanubaUtilities.TextConfiguration(
