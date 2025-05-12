@@ -75,6 +75,7 @@ class VeSdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Acti
             return
         }
 
+        println("screen = $screen")
         when (methodName) {
             METHOD_START -> {
                 initialize(licenseToken, featuresConfig, exportData) { activity ->
@@ -121,7 +122,7 @@ class VeSdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Acti
                                         it.toLong()
                                     )
                                 }
-                                println("draft = $draft")
+                                println("draft 999999 = $draft")
                                 VideoCreationActivity.startFromDrafts(
                                     context = activity,
                                     predefinedDraft = draft,

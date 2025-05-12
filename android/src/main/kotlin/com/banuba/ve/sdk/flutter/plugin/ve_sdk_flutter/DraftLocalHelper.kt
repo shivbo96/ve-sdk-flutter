@@ -26,10 +26,10 @@ object DraftLocalHelper {
                     Draft(
                         sameDayIndex = obj.getInt("sameDayIndex"),
                         creationTimestampMs = obj.getLong("created_at"),
-//                        preview = Draft.Preview(
-//                            uri = Uri.parse(obj.getString("preview")),
-//                            rotation = Rotation.valueOf(obj.getString("preview_rotation"))
-//                        ),
+                        preview = Draft.Preview(
+                            uri = Uri.parse(obj.getString("preview")),
+                            rotation = Rotation.valueOf(obj.getString("preview_rotation"))
+                        ),
                         dir = File(obj.getString("dir")),
                         durationMs = obj.getLong("duration")
                     )
