@@ -120,8 +120,6 @@ class VeSdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Acti
                                             sessionsPath,
                                             id.toLongOrNull() ?: return@let null
                                         )
-                                        println("localDraft--> ${localDraft?.sameDayIndex}")
-                                        println("localDraft creationTimestampMs--> ${localDraft?.creationTimestampMs}")
                                         DraftLocalHelper.getSessionBySameDayIndex(
                                             sessionsPath,
                                             localDraft?.sameDayIndex ?: 1,
