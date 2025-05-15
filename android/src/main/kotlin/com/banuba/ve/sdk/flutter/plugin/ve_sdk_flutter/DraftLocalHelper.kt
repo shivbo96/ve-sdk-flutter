@@ -51,8 +51,8 @@ object DraftLocalHelper {
 
     }
 
-    fun getSessionBySameDayIndex(filePath: String, index: Int): Draft? {
-        return parseSessionJson(filePath).find { it.sameDayIndex == index }
+    fun getSessionBySameDayIndex(filePath: String, index: Int, createdAt: Long): Draft? {
+        return parseSessionJson(filePath).find { it.sameDayIndex == index &&  it.creationTimestampMs == createdAt }
 
     }
 
