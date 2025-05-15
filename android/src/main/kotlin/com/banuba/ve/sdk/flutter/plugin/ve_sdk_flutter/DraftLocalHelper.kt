@@ -20,7 +20,7 @@ object DraftLocalHelper {
         val sessions = mutableListOf<Draft>()
         for (i in 0 until availableSessions.length()) {
             val obj = availableSessions.getJSONObject(i)
-            val preview = obj.getString("created_at")
+            val preview = obj.getString("preview")
             if (!preview.isNullOrEmpty()) {
                 sessions.add(
                     Draft(
@@ -48,6 +48,11 @@ object DraftLocalHelper {
     // Function to get full session object by createdAt
     fun getSessionByCreatedDate(filePath: String, createdAt: Long): Draft? {
         return parseSessionJson(filePath).find { it.creationTimestampMs == createdAt }
+
+    }
+
+    fun getSessionBySameDayIndex(filePath: String, index: Int): Draft? {
+        return parseSessionJson(filePath).find { it.sameDayIndex == index }
 
     }
 

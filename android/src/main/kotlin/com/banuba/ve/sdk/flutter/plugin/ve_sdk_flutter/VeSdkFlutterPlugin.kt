@@ -20,9 +20,6 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.ActivityResultListener
 import org.json.JSONArray
-import org.json.JSONException
-import androidx.core.os.bundleOf
-import com.banuba.sdk.veui.data.captions.CaptionsApiService
 import org.json.JSONObject
 import java.io.File
 
@@ -75,7 +72,6 @@ class VeSdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Acti
             return
         }
 
-        println("screen = $screen")
         when (methodName) {
             METHOD_START -> {
                 initialize(licenseToken, featuresConfig, exportData) { activity ->
@@ -116,13 +112,23 @@ class VeSdkFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, Acti
                             SCREEN_EDITOR -> {
                                 val draftId =
                                     call.argument<String>(INPUT_PARAM_DRAFT_VIDEO_SEQUENCE)
-                                val draft = draftId?.let {
-                                    DraftLocalHelper.getSessionByCreatedDate(
-                                        "${activity.filesDir.path}/sessions/sessions.json",
-                                        it.toLong()
-                                    )
+                                val draft = draftId?.let { id ->
+                                    try {
+                                        val sessionsPath =
+                                            "${activity.filesDir.path}/sessions/sessions.json"
+                                        val localDraft = DraftLocalHelper.getSessionByCreatedDate(
+                                            sessionsPath,
+                                            id.toLongOrNull() ?: return@let null
+                                        )
+                                        DraftLocalHelper.getSessionBySameDayIndex(
+                                            sessionsPath,
+                                            localDraft?.sameDayIndex ?: 1
+                                        )
+                                    } catch (e: Exception) {
+
+                                        return@let null
+                                    }
                                 }
-                                println("draft 999999 = $draft")
                                 VideoCreationActivity.startFromDrafts(
                                     context = activity,
                                     predefinedDraft = draft,
